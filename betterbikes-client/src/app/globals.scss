@@ -1,0 +1,150 @@
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+
+/* layouts designs and typography */
+@layer components {
+    .max-w-layout {
+        @apply 2xl:max-w-[1400px] xl:max-w-[1300px] max-w-[90vw] mx-auto;
+    }
+
+    .flex-center {
+        @apply flex items-center justify-center;
+    }
+
+    .flex-around {
+        @apply flex items-center justify-around;
+    }
+
+    .flex-between {
+        @apply flex items-center justify-between;
+    }
+
+    .flex-col-center {
+        @apply flex flex-col items-center justify-center;
+    }
+
+    .flex-col-start {
+        @apply flex flex-col items-center justify-start;
+    }
+
+}
+
+// Fonts and typography
+@layer components {
+    .font-big {
+        @apply text-[4rem];
+    }
+
+    .h1-font {
+        @apply text-[2.25rem];
+    }
+
+    .h2-font {
+        @apply text-[1.5rem];
+    }
+
+    .h3-font {
+        @apply text-[1.25rem];
+    }
+
+    .normal-font {
+        @apply text-base;
+    }
+
+    .small-font {
+        @apply text-sm;
+    }
+
+    .tiny-font {
+        @apply text-[0.625rem];
+    }
+
+    .main-btn {
+        @apply bg-main-foreground text-white py-3 px-6 color-transition hover:bg-main-accent font-semibold; 
+    }
+
+
+    .accent-btn {
+        @apply bg-main-accent text-white py-3 px-6 color-transition hover:bg-main-foreground font-semibold;
+    }
+}
+
+
+
+@layer components {
+    .color-transition {
+        @apply transition-colors duration-500 ease-in-out;
+    }
+
+    .all-transition {
+        @apply transition-all duration-500 ease-in-out;
+    }
+
+    .mobile-nav-links {
+        @apply block p-4 text-sm font-semibold text-gray-700 hover: bg-accent-1 dark:hover:bg-gray-900 hover:text-white rounded-xl;
+    }
+
+    .button-hover {
+        @apply hover: bg-accent-1;
+    }
+}
+
+
+::-webkit-scrollbar {
+    width: 4px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background: #333333;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #636363;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+.disable-scroll {
+    overflow: hidden;
+}
+
+.nav-links {
+    position: relative;
+
+    &:after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        width: 0;
+        height: 2px;
+        background-color: #c33538;
+        transition: all 0.3s ease-in-out;
+    }
+
+    &:hover:after {
+        width: 100%;
+        left: 0;
+    }
+
+    &:active:after {
+        width: 100%;
+        left: 0;
+    }
+
+
+}
