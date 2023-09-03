@@ -77,7 +77,7 @@ export default function LoginPage() {
               ></path>
             </svg>
           </div>
-          <div className="bg-white shadow-md border flex">
+          <div className="bg-white shadow-sm rounded-2xl border flex">
             <section className="flex items-center  justify-center px-8 py-8 sm:px-12 lg:col-span-7 lg:py-12 lg:px-16 xl:col-span-6">
               <div className="max-w-xl lg:max-w-3xl">
                 <p className="text-2xl text-center font-bold text-main-foreground">
@@ -154,7 +154,7 @@ export default function LoginPage() {
 
             <section className="hidden lg:block lg:col-span-5 relative">
               <div className="h-full absolute w-full "></div>
-              <div className="h-full flex-col-center bg-main-accent">
+              <div className="h-full flex-col-center bg-main-accent py-4 rounded-r-2xl">
                 <p className="text-white text-2xl font-bold">
                   Rent a bike, ride a bike.
                 </p>

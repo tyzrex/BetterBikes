@@ -16,8 +16,8 @@ export const Navlinks: any[] = [
     icon: <GrNotes className="w-6 h-6" />,
   },
   {
-    name: "Features",
-    href: "/emi-calculator",
+    name: "List Vehicle",
+    href: "/list-vehicle",
     icon: <BsCalculator className="w-6 h-6" />,
   },
   {

@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 import { BsBookmarkCheckFill } from "react-icons/bs";
+import NoPreview from "@/../public/assets/img_placeholder.png";
 
 interface Props {
   vehicleImage: any;
@@ -11,17 +12,24 @@ interface Props {
   buttonText: string;
   postId: number;
   vehicleRating?: string;
+  type?: string;
 }
 
 export default function VehicleCard(props: Props) {
   return (
     <section>
-      <div className="bg-gray-100 relative flex w-full max-w-lg sm:max-w-[260px] cursor-pointer flex-col overflow-hidden  py-4 group color-transition hover:border-gray-200 border-b-4 border-b-main-foreground hover:border-b-4 hover:border-b-main-accent hover:shadow-lg hover:bg-main-foreground duration-700 hover:text-white text-main-foreground gap-2">
+      <div
+        className={`bg-gray-100 relative flex w-full max-w-lg sm:max-w-[260px] cursor-pointer flex-col overflow-hidden py-4 group color-transition hover:border-gray-200 border-b-4 border-b-main-foreground hover:border-b-4 hover:border-b-main-accent hover:shadow-lg hover:bg-main-foreground duration-700 hover:text-white text-main-foreground gap-2 ${
+          props.type === "preview" ? "min-w-[300px]" : "" // Add your minimum width class here
+        }`}
+      >
         <div className="h-full w-full">
           <div className="relative w-full">
             <Image
-              src={props.vehicleImage}
-              className="mb-2 h-[250px] object-contain rounded-t-xl transition-transform duration-500 ease-in-out"
+              src={props?.vehicleImage ? props.vehicleImage : NoPreview}
+              width={0}
+              height={0}
+              className="mb-2 h-[250px] w-full object-contain rounded-t-xl transition-transform duration-500 ease-in-out"
               alt=""
             />
           </div>
