@@ -1,0 +1,60 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String        @id @default(uuid()) @map("userId")
+  email         String        @unique
+  password      String
+  created_at    DateTime      @default(now())
+  updated_at    DateTime      @default(now())
+  name          String
+  phone         String        @unique
+  address       String
+  role          Role          @default(USER)
+  vehicle_posts VehiclePost[]
+}
+
+model OAuthUser {
+  id             String        @id @default(uuid()) @map("oAuthUserId")
+  email          String        @unique
+  profile_image  String?
+  created_at     DateTime      @default(now())
+  updated_at     DateTime      @default(now())
+  name           String
+  phone          String?       @unique
+  address        String?
+  oAuth_provider String
+  oAuth_id       String
+  role           Role          @default(USER)
+  vehicle_posts  VehiclePost[]
+}
+
+model VehiclePost {
+  vehicle_post_id     String     @id @default(cuid())
+  vehicle_type        String
+  vehicle_model       String
+  vehicle_number      String
+  vehicle_image       String
+  vehicle_color       String
+  vehicle_price       Float
+  vehicle_brand       String
+  vehicle_description String
+  vehicle_features    String[]
+  created_at          DateTime   @default(now())
+  updated_at          DateTime   @default(now())
+  owner_id            String
+  oAuthUserId         String?
+  OAuthUser           OAuthUser? @relation(fields: [oAuthUserId], references: [id])
+  owner               User       @relation(fields: [owner_id], references: [id])
+}
+
+enum Role {
+  USER
+  ADMIN
+}
