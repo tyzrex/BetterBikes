@@ -97,6 +97,9 @@ export default function Form() {
       e.preventDefault();
       setLoading(true);
       const error: any = validation(data);
+      if (error) {
+        toast.error("Please fill all the fields");
+      }
       setPostError(error);
       if (Object.keys(error).length === 0) {
         const formData = new FormData();
@@ -111,6 +114,7 @@ export default function Form() {
         formData.append("vehicleDescription", data.vehicleDescription);
         formData.append("numberPlate", data.numberPlate);
         formData.append("features", data.features);
+
         try {
         } catch (err: any) {
           toast.error(err.message);

@@ -4,9 +4,8 @@ import RentInfo from "./components/RentInfo/RentInfo";
 import Search from "./components/Search/Search";
 import FAQ from "./components/FAQ/FAQ";
 import LogoCloud from "./components/LogoCloud/LogoCloud";
-import { toast } from "react-toastify";
 
-export default function Home() {
+export default async function Home() {
   return (
     <main className="max-w-layout">
       <Hero />
