@@ -47,7 +47,6 @@ const validationSchema = yup.object().shape({
     .string()
     .required("Number Plate is required")
     .matches(regex.alphaNumeric.regex, "Number Plate should be alphanumeric"),
-  listingType: yup.string().required("Listing Type is required"),
   features: yup.string().required("Features are required"),
   // vehiclefile: yup.string().required("Vehicle Image is required"),
 });

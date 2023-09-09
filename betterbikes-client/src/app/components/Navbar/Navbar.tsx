@@ -2,8 +2,22 @@ import Link from "next/link";
 import { Navlinks } from "./Navbardata";
 
 import MobileMenu from "./MobileMenu";
+import { getServerSession } from "next-auth";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import Image from "next/image";
+import { signOut } from "next-auth/react";
+import LogOutButton from "./LogOut";
 
-const Navbar = () => {
+const Navbar = async () => {
+  const session = await getServerSession();
+
   return (
     <nav className="bg-white py-4">
       <div
@@ -42,17 +56,53 @@ const Navbar = () => {
               </div>
             </div>
 
-            <div className="font-medium flex-center gap-2">
-              <Link prefetch={false} href="/login">
-                <button className="text-main-foreground hover:text-main-accent font-bold py-2 px-4 rounded-full color-transition">
-                  Login
-                </button>
-              </Link>
+            {session ? (
+              <>
+                <DropdownMenu>
+                  <DropdownMenuTrigger>
+                    {session?.user?.image ? (
+                      <Image
+                        src={session?.user?.image}
+                        alt="User Image"
+                        width={40}
+                        height={40}
+                        className="rounded-full"
+                      />
+                    ) : (
+                      <>
+                        <div className="flex items-center justify-center w-10 h-10 rounded-full bg-gray-200">
+                          <span className="text-gray-700 font-medium text-lg leading-none">
+                            {session?.user?.name?.charAt(0)}
+                          </span>
+                        </div>
+                      </>
+                    )}
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className="w-56">
+                    <DropdownMenuLabel>{session?.user?.name}</DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem>Profile</DropdownMenuItem>
+                    <DropdownMenuItem>Billing</DropdownMenuItem>
+                    <DropdownMenuItem>Team</DropdownMenuItem>
+                    <DropdownMenuItem>
+                      <LogOutButton />
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </>
+            ) : (
+              <div className="font-medium flex-center gap-2">
+                <Link prefetch={false} href="/login">
+                  <button className="text-main-foreground hover:text-main-accent font-bold py-2 px-4 rounded-full color-transition">
+                    Login
+                  </button>
+                </Link>
 
-              <Link prefetch={false} href="/register">
-                <button className="accent-btn">Sign Up</button>
-              </Link>
-            </div>
+                <Link prefetch={false} href="/register">
+                  <button className="accent-btn">Sign Up</button>
+                </Link>
+              </div>
+            )}
           </div>
         </div>
       </div>
