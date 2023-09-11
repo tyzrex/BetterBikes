@@ -17,7 +17,7 @@ export const Navlinks: any[] = [
   },
   {
     name: "List Vehicle",
-    href: "/list-vehicle",
+    href: "/listvehicle",
     icon: <BsCalculator className="w-6 h-6" />,
   },
   {
