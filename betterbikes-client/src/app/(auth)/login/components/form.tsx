@@ -6,7 +6,11 @@ import { signIn } from "next-auth/react";
 import { useForm } from "react-hook-form";
 import { LoginSchemaType, loginSchema } from "../schema/loginSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { toast } from "react-toastify";
+// import { toast } from "react-toastify";
+import { redirect, useSearchParams } from "next/navigation";
+import { useToast } from "@/components/ui/use-toast";
+import { ToastAction } from "@radix-ui/react-toast";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
 export default function LoginForm() {
@@ -18,6 +22,9 @@ export default function LoginForm() {
     resolver: zodResolver(loginSchema),
   });
   const router = useRouter();
+  const params = useSearchParams();
+  const { toast } = useToast();
+  const [loginError, setLoginError] = useState("");
 
   const onSubmit = async (data: LoginSchemaType) => {
     const response = await signIn("credentials", {
@@ -26,15 +33,46 @@ export default function LoginForm() {
       redirect: false,
       callbackUrl: "/",
     });
-    if (!response?.error) {
-      toast.success("Successfully Logged In");
+
+    if (response?.error === null) {
+      toast({
+        title: `Successfully Logged In as ${data.email}`,
+        description: new Date().toTimeString(),
+        className: "bg-[#5cb85c] text-white",
+      });
       router.push("/");
     } else {
-      const error = JSON.parse(response.error);
-      toast.error("eror");
-      console.log(error);
+      toast({
+        title: `${response?.error}`,
+        description: new Date().toTimeString(),
+        variant: "destructive",
+        action: (
+          <ToastAction className="border p-2" altText="Try again">
+            Try again
+          </ToastAction>
+        ),
+      });
+      console.log(response?.error);
     }
   };
+
+  useEffect(() => {
+    const errorParams = params.get("error");
+
+    if (errorParams) {
+      setLoginError(errorParams);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (loginError) {
+      toast({
+        title: loginError,
+        description: new Date().toTimeString(),
+        variant: "destructive",
+      });
+    }
+  }, [loginError]);
 
   return (
     <>

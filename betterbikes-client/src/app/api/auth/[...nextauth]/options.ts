@@ -30,23 +30,12 @@ export const options: NextAuthOptions = {
         } catch (err: any) {
           console.log(err.response.data);
           switch (err.response.status) {
-            case 400: {
-              throw new Error(
-                JSON.stringify({ errors: err.response.data, status: 400 })
-              );
-            }
-            case 401: {
-              throw new Error(
-                JSON.stringify({ errors: err.response.data, status: 401 })
-              );
-            }
+            case 400:
+            case 401:
+              throw new Error(err.response.data.message);
+
             default: {
-              throw new Error(
-                JSON.stringify({
-                  errors: ["Something went wrong"],
-                  status: 500,
-                })
-              );
+              throw new Error("Something went wrong");
             }
           }
         }
@@ -59,22 +48,35 @@ export const options: NextAuthOptions = {
   },
   pages: {
     signIn: "/signin",
+    error: "/login",
   },
   callbacks: {
-    async session({ session }) {
+    async session({ session, token }) {
       return session;
     },
     async signIn({ user, account }) {
-      if (account?.provider === "google") {
-        const response = await PostRequest("/auth/login/google", {
-          email: user?.email,
-          name: user?.name,
-          profileImage: user?.image,
-          oAuthId: account?.providerAccountId,
-          oAuthProvider: account?.provider,
-        });
+      try {
+        if (account?.provider === "google") {
+          const response = await PostRequest("/auth/login/google", {
+            email: user?.email,
+            name: user?.name,
+            profileImage: user?.image,
+            oAuthId: account?.providerAccountId,
+            oAuthProvider: account?.provider,
+          });
+        }
+        return true;
+      } catch (err: any) {
+        switch (err.response.status) {
+          case 400:
+          case 401:
+            throw new Error(err.response.data.message);
+
+          default: {
+            throw new Error("Something went wrong");
+          }
+        }
       }
-      return true;
     },
     async jwt({ token }) {
       return token;
