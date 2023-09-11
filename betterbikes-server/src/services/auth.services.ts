@@ -1,10 +1,11 @@
 import {prisma} from "../config/prisma"
 
-export const checkAlreadyRegistered= async (email: string) => {
+export const checkAlreadyRegistered= async (email: string, phone?: string) => {
  try {
     const user = await prisma.user.findUnique({
       where: {
         email: email,
+        phone: phone
       },
     });
 
@@ -19,6 +20,7 @@ export const checkAlreadyRegistered= async (email: string) => {
     const oAuthUser = await prisma.oAuthUser.findUnique({
       where: {
         email: email,
+
       },
     });
 
