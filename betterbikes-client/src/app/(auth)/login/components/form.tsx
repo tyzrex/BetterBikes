@@ -7,7 +7,7 @@ import { useForm } from "react-hook-form";
 import { LoginSchemaType, loginSchema } from "../schema/loginSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 // import { toast } from "react-toastify";
-import { redirect, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { useToast } from "@/components/ui/use-toast";
 import { ToastAction } from "@radix-ui/react-toast";
 import { useEffect, useState } from "react";
@@ -40,7 +40,7 @@ export default function LoginForm() {
         description: new Date().toTimeString(),
         className: "bg-[#5cb85c] text-white",
       });
-      router.push("/");
+      router.replace("/");
     } else {
       toast({
         title: `${response?.error}`,

@@ -23,7 +23,7 @@ export const options: NextAuthOptions = {
           });
 
           const user = res.data;
-
+          console.log(res.data);
           if (user) {
             return user.user;
           }
@@ -47,11 +47,22 @@ export const options: NextAuthOptions = {
     strategy: "jwt",
   },
   pages: {
-    signIn: "/signin",
+    signIn: "/login",
     error: "/login",
+    signOut: "/signout",
   },
   callbacks: {
     async session({ session, token }) {
+      session.user = token as any;
+
+      if (new Date(session.user.accessExpireTime) < new Date()) {
+        console.log("Access token is valid");
+        const response = await PostRequest("/auth/refresh-token", {
+          token: session.user.refreshToken,
+        });
+        session.user.access_token = response.data.newAccessToken;
+      }
+
       return session;
     },
     async signIn({ user, account }) {
@@ -64,6 +75,7 @@ export const options: NextAuthOptions = {
             oAuthId: account?.providerAccountId,
             oAuthProvider: account?.provider,
           });
+          console.log(response.data);
         }
         return true;
       } catch (err: any) {
@@ -78,7 +90,9 @@ export const options: NextAuthOptions = {
         }
       }
     },
-    async jwt({ token }) {
+    async jwt({ token, user }) {
+      if (user) return { ...token, ...user };
+
       return token;
     },
   },

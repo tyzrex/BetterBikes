@@ -9,6 +9,7 @@ import { FcGoogle } from "react-icons/fc";
 
 import { PostRequest } from "@/app/services/httpRequest";
 import { useToast } from "@/components/ui/use-toast";
+import { useRouter } from "next/navigation";
 
 export default function RegisterForm() {
   const {
@@ -20,6 +21,7 @@ export default function RegisterForm() {
   });
 
   const { toast } = useToast();
+  const router = useRouter();
 
   const onSubmit = async (data: RegisterSchemaType) => {
     try {
@@ -31,6 +33,7 @@ export default function RegisterForm() {
           description: new Date().toString(),
           className: "bg-green-600 text-white border-none",
         });
+        router.replace("/login");
       }
     } catch (err: any) {
       toast({

@@ -14,9 +14,11 @@ import {
 import Image from "next/image";
 import { signOut } from "next-auth/react";
 import LogOutButton from "./LogOut";
+import { options } from "@/app/api/auth/[...nextauth]/options";
+import { PostRequest } from "@/app/services/httpRequest";
 
 const Navbar = async () => {
-  const session = await getServerSession();
+  const session = await getServerSession(options);
 
   return (
     <nav className="bg-white py-4">

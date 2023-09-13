@@ -3,9 +3,8 @@ import type { NextRequest } from 'next/server'
  
 // This function can be marked `async` if using `await` inside
 export function middleware(request: NextRequest) {
-    console.log("middle ware working")
+
     const authToken = request.cookies.get('next-auth.session-token')?.value
-    console.log(authToken)
 
     const loggedInUserNotAccessiblePaths = 
     request.nextUrl.pathname === '/login' || '/signup'
