@@ -1,142 +1,94 @@
-import bcrypt from "bcrypt";
-import { prisma } from "../config/prisma";
-import { Request, Response } from "express";
-import { checkAlreadyRegistered } from "../services/auth.services";
-import dotenv from "dotenv";
-import { PrismaClient, Prisma } from '@prisma/client';
+import { NextFunction, Request, Response } from "express";
 import {
-  type IRegister,
-  type ILogin,
-  type IGoogleLogin,
-} from "@app/interfaces/auth";
-import { generateRefreshToken, generateToken } from "../utils/generateToken";
+  checkAlreadyRegistered,
+  createOauthUser,
+  createUser,
+  getRefreshToken,
+  loginWithCredentials,
+  loginWithOAuth,
+} from "../services/auth.services";
+import dotenv from "dotenv";
+import { loginSchema, registerSchema } from "../validation/authValidation";
+import { type IGoogleLogin } from "@app/interfaces/auth";
+import AppError from "../utils/error";
+import ErrorHandler from "../utils/errorType";
+
 dotenv.config();
 
-export const RegisterUser = async (req: Request, res: Response) => {
+export const RegisterUser = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
-    const { email, password, fullName, phone, address }: IRegister = req.body;
+    const userData = registerSchema.parse(req.body);
 
-    const checkRegistration = await checkAlreadyRegistered(email);
+    const checkRegistration = await checkAlreadyRegistered(userData.email);
 
     if (checkRegistration?.status === true) {
-      return res.status(409).json({ message: "User already registered" });
+      return next(new AppError(409, "User already Exists please login"))
     }
 
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
+    const user = await createUser(userData);
 
-    const user = await prisma.user.create({
-      data: {
-        email,
-        password: hashedPassword,
-        name: fullName,
-        phone,
-        address,
-      },
-    });
-    
-
-    res.status(200).json(
-    {
-       message: "Successfully Registered, Proceed to Login"
+    if (user) {
+      res.status(200).json({
+        message: "Successfully Registered, Proceed to Login",
+      });
     }
-    );
-  } catch (err) {
-     if (err instanceof Prisma.PrismaClientKnownRequestError) {
-    // The .code property can be accessed in a type-safe manner
-    if (err.code === 'P2002') {
-      return res.status(422).json({
-        message: "There is a unique constraint violation, a new user cannot be created with this phone"
-      })
-    }}
-    res.status(400).json(err);
+  } catch (err: any) {
+    const errors = ErrorHandler(err)
+    next(new AppError(errors.statusCode, errors.message))
   }
 };
 
-export const CredentialLoginUser = async (req: Request, res: Response) => {
+export const CredentialLoginUser = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
-    const credentials = req.body as ILogin;
+    const credentials = loginSchema.parse(req.body);
     const registeredUser = await checkAlreadyRegistered(credentials.email);
     if (registeredUser?.status === false) {
-      return res
-        .status(401)
-        .json({ message: "User not found, please register" });
+      return next(new AppError(401, "This email is not registered"));
     }
 
     const isOAuthUser = registeredUser?.oAuthUser;
 
     if (isOAuthUser) {
-      return res
-        .status(401)
-        .json({ message: "Use OAuth with Google for this email" });
+      return next(new AppError(409, "This account was linked using OAuth. Please sign in with Oauth"))
     }
 
-    const isPasswordValid = await bcrypt.compare(
-      credentials.password,
-      registeredUser?.user?.password as string
+    const user = await loginWithCredentials(
+      registeredUser,
+      credentials.password
     );
-
-    if (!isPasswordValid) {
-      return res.status(401).json({
-        message: "Invalid credentials",
+    if (user) {
+      res.status(200).json({
+        user: user,
+        message: "Successfully Logged In",
       });
     }
-
-    const token = generateToken(registeredUser?.user?.id as string);
-    const refreshToken = generateRefreshToken(
-      registeredUser?.user?.id as string
-    );
-    const accessExpireTime = new Date(
-      new Date().getTime() + 24 * 60 * 60 * 1000
-    );
-    const refreshExpireTime = new Date(
-      new Date().getTime() + 24 * 7 * 60 * 60 * 1000
-    );
-
-    res.status(200).json({
-      user: {
-        email: registeredUser?.user?.email,
-        name: registeredUser?.user?.name,
-        id: registeredUser?.user?.id,
-        access_token: token,
-        refreshToken: refreshToken,
-        accessExpireTime: accessExpireTime,
-        refreshExpireTime: refreshExpireTime,
-        role: registeredUser?.user?.role,
-      },
-    });
   } catch (err) {
-    console.error(err);
-    res.status(500).json(err);
+    const errors = ErrorHandler(err)
+    next(new AppError(errors.statusCode, errors.message ));
   }
 };
 
-export const GoogleLoginUser = async (req: Request, res: Response) => {
+export const GoogleLoginUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const credentials = req.body as IGoogleLogin;
     const registeredUser = await checkAlreadyRegistered(credentials.email);
 
     if (registeredUser?.status === false) {
-      const user = await prisma.oAuthUser.create({
-        data: {
-          email: credentials.email,
-          name: credentials.name,
-          profile_image: credentials.profileImage,
-          oAuth_provider: credentials.oAuthProvider,
-          oAuth_id: credentials.oAuthId,
-        },
-      });
-
-      const token = generateToken(user?.id as string);
-
-      return res.status(200).json({
-        user: {
-          email: user?.email,
-          name: user?.name,
-          id: user?.id,
-          access_token: token,
-        },
-      });
+      const user = await createOauthUser(credentials);
+      if (user) {
+        return res.status(200).json({
+          user: user,
+          message: "Successfully Logged In",
+        });
+      }
     } else {
       if (registeredUser?.user?.email === credentials.email) {
         return res.status(401).json({
@@ -144,32 +96,35 @@ export const GoogleLoginUser = async (req: Request, res: Response) => {
             "This account was linked using credentials. Please sign in with your email and password",
         });
       } else {
-        const token = generateToken(registeredUser?.user?.id as string);
-        const refreshToken = generateRefreshToken(
-          registeredUser?.user?.id as string
-        );
-        const accessExpireTime = new Date(
-          new Date().getTime() + 24 * 60 * 60 * 1000
-        );
-        const refreshExpireTime = new Date(
-          new Date().getTime() + 24 * 7 * 60 * 60 * 1000
-        );
-        return res.status(200).json({
-          user: {
-            email: registeredUser?.oAuthUser?.email,
-            name: registeredUser?.oAuthUser?.name,
-            id: registeredUser?.oAuthUser?.id,
-            access_token: token,
-            refreshToken: refreshToken,
-            accessExpireTime: accessExpireTime,
-            refreshExpireTime: refreshExpireTime,
-            role: registeredUser?.oAuthUser?.role,
-          },
-        });
+        const user = await loginWithOAuth(registeredUser);
+        if (user) {
+          return res.status(200).json({
+            user: user,
+            message: "Successfully Logged In",
+          });
+        }
       }
     }
   } catch (err) {
-    console.error(err);
+    const errors = ErrorHandler(err)
+    next(new AppError(errors.statusCode, errors.message ));
+  }
+};
+
+export const RefreshToken = async (req: Request, res: Response) => {
+  try {
+    const { token } = req.body;
+
+    if (!token) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+
+    const newAccessToken = await getRefreshToken(token);
+
+    res.status(200).json({
+      newAccessToken: newAccessToken,
+    });
+  } catch (err) {
     res.status(400).json(err);
   }
 };
