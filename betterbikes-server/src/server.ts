@@ -3,6 +3,8 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import bodyParser from 'body-parser';
 import { appRoutes } from './routes/main';
+import {errorMiddleware} from './middleware/errorHandler';
+import "express-async-errors"
 dotenv.config();
 
 const app = express();
@@ -20,6 +22,8 @@ app.get('/', (req, res) => {
 
 //app routes
 appRoutes(app)
+app.use("*",errorMiddleware)
+
 
 const port = process.env.PORT;
 app.listen(port, () => {
