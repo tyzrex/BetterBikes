@@ -11,7 +11,7 @@ const ErrorHandler = (err: any) => {
     switch (err.code) {
       case "P2002":
         statusCode = 409;
-        message = "There is a unique constraint violation.";
+        message = "There is a unique constraint violation. Use a different Phone Number";
         break;
       default:
         statusCode = 400;
