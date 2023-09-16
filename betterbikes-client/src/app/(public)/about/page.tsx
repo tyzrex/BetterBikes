@@ -22,15 +22,15 @@ export default function About() {
               just a few clicks, and our user-friendly interface makes it easy
               to find the perfect ride for your needs. Our community of owners
               are carefully vetted and selected for their experience,
-              reliability, and dedication to customer service. Whether you're
-              looking to rent a car for a weekend road trip or a bike for a day
-              of exploring the city, our owners are here to provide you with a
-              safe and hassle-free experience. <br /> <br /> In addition to our
-              booking functionality, we also offer a range of selling options,
-              including the ability to buy and sell cars and bikes on our
-              platform. We are committed to making transportation more
-              affordable and accessible, and we believe that our platform can
-              help people from all walks of life connect with the rides they
+              reliability, and dedication to customer service. Whether
+              you&apos;re looking to rent a car for a weekend road trip or a
+              bike for a day of exploring the city, our owners are here to
+              provide you with a safe and hassle-free experience. <br /> <br />{" "}
+              In addition to our booking functionality, we also offer a range of
+              selling options, including the ability to buy and sell cars and
+              bikes on our platform. We are committed to making transportation
+              more affordable and accessible, and we believe that our platform
+              can help people from all walks of life connect with the rides they
               need. At BetterBikes, we are passionate about providing the best
               possible experience for our customers. Our team is dedicated to
               ensuring that every rental is safe, reliable, and easy to use. We

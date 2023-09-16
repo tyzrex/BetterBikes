@@ -8,12 +8,15 @@ import {
 } from "react-icons/si";
 export default function LogoCloud() {
   const images = [
-    <SiYamahacorporation className="text-7xl text-main-foreground" />,
-    <SiBmw className="text-7xl text-main-foreground" />,
-    <SiSuzuki className="text-7xl text-main-foreground" />,
-    <SiKtm className="text-7xl text-main-foreground" />,
-    <SiDucati className="text-7xl text-main-foreground" />,
-    <SiHonda className="text-7xl text-main-foreground" />,
+    <SiYamahacorporation
+      key="yamaha"
+      className="text-7xl text-main-foreground"
+    />,
+    <SiBmw key="bmw" className="text-7xl text-main-foreground" />,
+    <SiSuzuki key="suzuki" className="text-7xl text-main-foreground" />,
+    <SiKtm key="ktm" className="text-7xl text-main-foreground" />,
+    <SiDucati key="ducati" className="text-7xl text-main-foreground" />,
+    <SiHonda key="honda" className="text-7xl text-main-foreground" />,
   ];
 
   return (
