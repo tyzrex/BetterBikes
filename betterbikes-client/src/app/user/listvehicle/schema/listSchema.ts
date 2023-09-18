@@ -1,17 +1,18 @@
 import {z} from 'zod'
 
-const MAX_FILE_SIZE = 500000;
+const MAX_FILE_SIZE = 5000000;
 const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
 
 export const VehicleSchema = z.object({
     vehicleImage:
          z
     .any()
-    .refine((files) => files?.[0]?.size <= MAX_FILE_SIZE, `Max image size is 5MB.`)
+
     .refine(
       (files) => ACCEPTED_IMAGE_TYPES.includes(files?.[0]?.type),
       "Only .jpg, .jpeg, .png and .webp formats are supported."
     )
+    .refine((files) => files?.[0]?.size < MAX_FILE_SIZE, `Max image size is 5MB.`)
     ,
     // vehicleImage: z.string().nonempty("Vehicle image is required").min(2, "Vehicle image must be atleast 2 characters").max(100),
     vehicleName: z.string().nonempty("Vehicle name is required").min(2, "Vehicle name must be atleast 2 characters").max(100),
