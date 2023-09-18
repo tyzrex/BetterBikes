@@ -30,9 +30,9 @@ export default function Featured() {
   ];
 
   return (
-    <section className="mt-10">
+    <section className="mt-20 md:mt-10">
       <div className="flex flex-col items-center justify-center">
-        <h1 className="text-5xl lg:text-6xl lg:leading-[1.2] font-semibold text-main-foreground text-center md:text-left">
+        <h1 className="text-5xl lg:text-6xl lg:leading-[1.2] font-semibold text-main-foreground my-5 md:my-0 text-center md:text-left">
           Choose From Our Featured Vehicles
         </h1>
         <p className="text-lg text-main-light mt-5">

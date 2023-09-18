@@ -22,7 +22,7 @@ const FAQ = () => {
         </div>
 
         <div className="-mx-4 flex flex-wrap">
-          <div className="w-full px-4 lg:w-1/2">
+          <div className="w-full lg:w-1/2">
             <AccordionItem
               header="How long we deliver your first blog post?"
               text="It takes 2-3 weeks to get your first blog post ready. That includes the in-depth research & creation of your monthly content marketing strategy that we do before writing your first blog post, Ipsum available ."
@@ -70,7 +70,7 @@ const AccordionItem = ({ header, text }: any) => {
         className={`faq-btn flex-center w-full text-left`}
         onClick={() => handleToggle()}
       >
-        <div className="mr-5 flex h-10 w-full max-w-[40px] items-center justify-center rounded-lg bg-primary bg-opacity-5 text-primary">
+        <div className="mr-5 flex h-10 w-full max-w-[40px] items-center justify-center rounded-lg bg-gray-500 bg-opacity-5 text-main-foreground color-transition">
           <svg
             className={`duration-200 ease-in-out fill-black group-hover:fill-white ${
               active ? "rotate-180" : ""

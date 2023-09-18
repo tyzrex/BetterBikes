@@ -40,7 +40,7 @@ export default function LoginForm() {
         description: new Date().toTimeString(),
         className: "bg-[#5cb85c] text-white",
       });
-      router.replace("/");
+      router.replace("/user/dashboard");
     } else {
       toast({
         title: `${response?.error}`,

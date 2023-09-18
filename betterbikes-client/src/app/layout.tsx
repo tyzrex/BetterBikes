@@ -5,6 +5,7 @@ import Toast from "./components/Toast/Toast";
 import NextAuthProvider from "./provider/AuthProvider";
 import { Toaster } from "@/components/ui/toaster";
 import NextProgressBar from "nextjs-toploader";
+import { getServerSession } from "next-auth";
 
 const poppins = Poppins({
   weight: ["200", "300", "400", "500", "600", "700", "800"],
@@ -18,7 +19,7 @@ export const metadata: Metadata = {
   keywords: "Bikes, Scooters, Rent, Two Wheeler, Vehicles, Online",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;

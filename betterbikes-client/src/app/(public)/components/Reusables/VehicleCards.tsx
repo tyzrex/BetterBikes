@@ -26,7 +26,13 @@ export default function VehicleCard(props: Props) {
         <div className="h-full w-full">
           <div className="relative w-full">
             <Image
-              src={props?.vehicleImage ? props.vehicleImage : NoPreview}
+              src={
+                props?.vehicleImage
+                  ? props.type === "preview"
+                    ? URL.createObjectURL(props.vehicleImage)
+                    : props.vehicleImage
+                  : NoPreview
+              }
               width={0}
               height={0}
               className="mb-2 h-[250px] w-full object-contain rounded-t-xl transition-transform duration-500 ease-in-out"
