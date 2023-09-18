@@ -17,7 +17,7 @@ const nextConfig = {
     ],
   },
   env: {
-    API_URL: process.env.DJANGO_BACKEND_BASE_URL,
+    API_URL: process.env.EXPRESS_BACKEND_BASE_URL,
     NEXTAUTH_URL: process.env.NEXTAUTH_URL,
     GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
     GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,

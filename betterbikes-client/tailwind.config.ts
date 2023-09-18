@@ -21,6 +21,9 @@ module.exports = {
       },
       colors: {
                 "main-bg": "#F7F7F7",
+        "accent-blue": "#0079FF",
+        "accent-yellow" : "#FFE15D",
+        "accent-green" : "#36AE7C",
         "main-foreground": "#3a3e44",
         "main-accent": "#e73538",
         "main-light": "#6b6b6b",

@@ -221,3 +221,11 @@
     @apply bg-background text-foreground;
   }
 }
+
+input{
+    @apply relative;
+    //select the file button and put it on the right side of the input
+    &::-webkit-file-upload-button {
+        @apply bg-main-foreground text-white absolute py-3 border-none cursor-pointer -right-1 top-0 color-transition hover:bg-main-accent font-semibold ;
+    }
+}
