@@ -1,16 +1,16 @@
 import "./globals.scss";
 import type { Metadata } from "next";
-import { Poppins } from "next/font/google";
+// import { Poppins } from "next/font/google";
 import Toast from "./components/Toast/Toast";
 import NextAuthProvider from "./provider/AuthProvider";
 import { Toaster } from "@/components/ui/toaster";
 import NextProgressBar from "nextjs-toploader";
-import { getServerSession } from "next-auth";
+// import { getServerSession } from "next-auth";
 
-const poppins = Poppins({
-  weight: ["200", "300", "400", "500", "600", "700", "800"],
-  subsets: ["latin"],
-});
+// const poppins = Poppins({
+//   weight: ["200", "300", "400", "500", "600", "700", "800"],
+//   subsets: ["latin"],
+// });
 
 export const metadata: Metadata = {
   title: "BetterBikes - Rent a Two Wheeler Vehicle Online",
@@ -26,7 +26,9 @@ export default async function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={poppins.className}>
+      <body
+      // className={poppins.className}
+      >
         <NextAuthProvider>
           <NextProgressBar color="#e73538" />
           {children}
