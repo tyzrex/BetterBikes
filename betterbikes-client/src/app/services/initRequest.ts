@@ -35,8 +35,6 @@ const ApiClient = () => {
 
   instance.interceptors.request.use(async (request) => {
     const session = await getSession();
-
-    console.log(session);
     if (session) {
       request.headers.Authorization = `Bearer ${session.user.access_token}`;
     }
@@ -49,6 +47,7 @@ const ApiClient = () => {
       return response;
     },
     (error) => {
+      console.log(error?.response?.data);
       return Promise.reject({
         data: error?.response?.data,
         status: error?.response?.status,
