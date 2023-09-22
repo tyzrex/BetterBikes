@@ -37,11 +37,10 @@ export default function RegisterForm() {
       }
     } catch (err: any) {
       toast({
-        title: err.response.data.message,
+        title: err.data.message,
         description: new Date().toString(),
         className: "bg-main-accent text-white border-none",
       });
-      console.log(err.response);
     }
   };
   return (

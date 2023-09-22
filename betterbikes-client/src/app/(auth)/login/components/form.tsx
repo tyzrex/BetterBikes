@@ -33,7 +33,7 @@ export default function LoginForm() {
       redirect: false,
       callbackUrl: "/",
     });
-
+    console.log(response);
     if (response?.error === null) {
       toast({
         title: `Successfully Logged In as ${data.email}`,
@@ -46,11 +46,6 @@ export default function LoginForm() {
         title: `${response?.error}`,
         description: new Date().toTimeString(),
         variant: "destructive",
-        action: (
-          <ToastAction className="border p-2" altText="Try again">
-            Try again
-          </ToastAction>
-        ),
       });
       console.log(response?.error);
     }
@@ -176,6 +171,7 @@ export default function LoginForm() {
           onClick={() => {
             signIn("google", {
               redirect: false,
+              callbackUrl: "/user/dashboard",
             });
           }}
           className="focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-gray-700 p-3 border rounded-lg border-gray-700 flex items-center w-full mt-5 hover:bg-gray-100"
