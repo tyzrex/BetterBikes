@@ -1,9 +1,9 @@
-import { GetRequest } from "@/app/services/httpRequest";
+import { serverRequest } from "@/app/services/serverRequest";
 
 export const getVehicleDetail = async (id: string) => {
     try {
-        const vehicle = GetRequest(`/vehicle/vehicle-detail/${id}`);
-        return vehicle;
+        const vehicle = await serverRequest(`/vehicle/vehicle-detail/${id}`, "GET");
+        return vehicle
     } catch (error) {
         throw error;
     }

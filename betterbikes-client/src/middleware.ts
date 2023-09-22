@@ -1,9 +1,11 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
+import { decode } from 'next-auth/jwt'
  
 // This function can be marked `async` if using `await` inside
 export async function middleware(request: NextRequest) {
     const authToken = request.cookies.get('next-auth.session-token')?.value
+
 
     const loggedInUserNotAccessiblePaths = 
     request.nextUrl.pathname === '/login' || request.nextUrl.pathname === '/signup'
@@ -13,12 +15,13 @@ export async function middleware(request: NextRequest) {
       if(request.nextUrl.pathname === '/'){
         return NextResponse.redirect(new URL('/user/dashboard', request.url))
       }
+     
     }
     if(
       loggedInUserNotAccessiblePaths
     ){
       if(authToken){
-        return NextResponse.redirect(new URL('/', request.url))
+        return NextResponse.redirect(new URL('/user/dashboard', request.url))
       }
     }
     else{

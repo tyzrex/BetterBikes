@@ -35,7 +35,6 @@
     .flex-col-start {
         @apply flex flex-col items-center justify-start;
     }
-
 }
 
 // Fonts and typography
@@ -76,6 +75,22 @@
     .accent-btn {
         @apply bg-main-accent text-white py-3 px-6 color-transition hover:bg-main-foreground font-semibold;
     }
+
+    .pagination-btn{
+        @apply p-3 bg-main-foreground hover:bg-main-accent color-transition text-white rounded-full;
+    }
+
+    .main-title-typography {
+        @apply text-3xl font-bold text-main-foreground  md:text-4xl;
+    }
+
+    .main-subtitle-typography {
+        @apply text-xl font-semibold text-main-foreground md:text-2xl lg:text-3xl;
+    }
+
+    .main-text-typography {
+        @apply text-base text-main-foreground md:text-lg lg:text-xl;
+    }
 }
 
 
@@ -96,7 +111,9 @@
     .button-hover {
         @apply hover: bg-accent-1;
     }
+
 }
+
 
 
 ::-webkit-scrollbar {

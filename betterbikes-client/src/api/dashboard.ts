@@ -1,7 +1,6 @@
-import { options } from "@/app/api/auth/[...nextauth]/options";
-import { GetRequest } from "@/app/services/httpRequest";
-import { serverRequest } from "@/app/services/serverRequest";
-import { Session, getServerSession } from "next-auth";
+
+import { serverProtectedRequest } from "@/app/services/serverRequest";
+import { Session} from "next-auth";
 
 interface Params{
     page?: number
@@ -9,20 +8,14 @@ interface Params{
 
 export const getDashboardData = async (
     params: Params,
-    session: Session | null 
+    session: Session
 ) => {
+
+
     try{
         const pageParam = params?.page ? `?page=${params?.page}` : "";
-        // const session = await getServerSession(options);
-        // const response = await GetRequest(`/dashboard-data/${pageParam}`
-        // ,{
-        //     headers: {
-        //         Authorization: `Bearer ${session?.user.access_token}`
-        //     }
-        // }
-        // );
 
-        const response = await serverRequest(`/dashboard-data/${pageParam}`, "GET", session);
+        const response = await serverProtectedRequest(`/dashboard-data/${pageParam}`, "GET", session);
         return response;
     }
     catch(error){
