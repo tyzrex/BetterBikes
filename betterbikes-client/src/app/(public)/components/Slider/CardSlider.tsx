@@ -67,7 +67,7 @@ export default function CardsSwiper({ data }: any) {
                     vehicleImage={item.image}
                     vehicleLocation="Kathmandu"
                     vehicleRating="4.5"
-                    vehiclePrice="1000"
+                    vehiclePrice={item.price}
                     buttonText="Book"
                     postId={item.id}
                   />

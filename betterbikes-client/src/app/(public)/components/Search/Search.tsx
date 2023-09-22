@@ -5,6 +5,7 @@ import { TbLocation } from "react-icons/tb";
 import { useState } from "react";
 import Link from "next/link";
 import { AiOutlineSearch } from "react-icons/ai";
+import { DatePickerWithPresets } from "../Reusables/Datepicker";
 
 interface Data {
   location: string;
@@ -36,6 +37,9 @@ export default function Search() {
     listingType: "All",
   });
 
+  const [startDate, setStartDate] = useState<Date>();
+  const [endDate, setEndDate] = useState<Date>();
+
   const [searchData, setSearchData] = useState<SearchData[]>([]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -43,35 +47,9 @@ export default function Search() {
     setData((prevData) => ({ ...prevData, [name]: value }));
   };
 
-  const handleDatePicker = () => {
-    setDatePicker(!datePicker);
-    handleDate();
-  };
-
-  const selectionRange: SelectionRange = {
-    startDate: new Date(),
-    endDate: new Date(),
-    key: "selection",
-  };
-
-  const convertDate = (date: Date): string => {
-    const newDate = new Date(date);
-    const year = newDate.getFullYear();
-    const month = `0${newDate.getMonth() + 1}`.slice(-2);
-    const day = newDate.getDate();
-    return `${year}-${month}-${day}`;
-  };
-
-  const handleDate = () => {
-    setData((prevData) => ({
-      ...prevData,
-      checkIn: convertDate(selectionRange.startDate),
-      checkOut: convertDate(selectionRange.endDate),
-    }));
-  };
   return (
     <>
-      <div className="mt-10 bg-gray-100 dark:glass p-8 md:p-10 lg:p-12 xl:p-0 xl:pl-12">
+      <div className="mt-10 bg-gray-100 p-8 md:p-10 lg:p-12 xl:p-0 xl:pl-12">
         <div>
           <div className="items-center grid content-center md:grid-cols-2 xl:grid-cols-5 gap-6 md:gap-5 ">
             <div>
@@ -79,13 +57,13 @@ export default function Search() {
                 <TbLocation className="text-3xl text-yellow-500" />
                 <label className="text-gray-800 dark:text-accent-3 text-xl md:text-[21px] font-bold">
                   {" "}
-                  Location
+                  Vehicle
                 </label>
               </div>
               <div>
                 <input
                   type="text"
-                  placeholder="Preferred Location"
+                  placeholder="Vehicle Name/Brand"
                   className="w-full border-none text-gray-500 bg-transparent rounded-lg p-2  placeholder:text-gray-400 text-xl md:text-[21px] font-medium py focus:outline-none"
                   onChange={handleChange}
                   id="location"
@@ -102,14 +80,7 @@ export default function Search() {
                   Check In
                 </label>
               </div>
-              <input
-                type="text"
-                readOnly={true}
-                value={data.checkIn}
-                placeholder="Pick a date"
-                className="w-full border-none text-gray-500 bg-transparent rounded-lg p-2  placeholder:text-gray-400 text-xl md:text-[21px] font-medium py focus:outline-none"
-                name="checkIn"
-              />
+              <DatePickerWithPresets date={startDate} setDate={setStartDate} />
             </div>
 
             <div>
@@ -120,15 +91,7 @@ export default function Search() {
                   Check Out
                 </label>
               </div>
-              <input
-                type="text"
-                readOnly={true}
-                value={data.checkOut}
-                placeholder="Pick a date"
-                className="w-full border-none text-gray-500 bg-transparent rounded-lg p-2  placeholder:text-gray-400 text-xl md:text-[21px] font-medium py focus:outline-none"
-                id="checkOut"
-                name="checkOut"
-              />
+              <DatePickerWithPresets date={endDate} setDate={setEndDate} />
             </div>
 
             <div className="flex flex-col">

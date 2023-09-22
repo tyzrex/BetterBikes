@@ -1,33 +1,23 @@
-import BikeImg from "@/../public/assets/whitemoto.webp";
 import CardsSwiper from "../Slider/CardSlider";
-export default function Featured() {
-  const data = [
-    {
-      id: 1,
-      name: "Bike",
-      image: BikeImg,
-    },
-    {
-      id: 2,
-      name: "Scooter",
-      image: BikeImg,
-    },
-    {
-      id: 3,
-      name: "Bike",
-      image: BikeImg,
-    },
-    {
-      id: 4,
-      name: "Bike",
-      image: BikeImg,
-    },
-    {
-      id: 5,
-      name: "Bike",
-      image: BikeImg,
-    },
-  ];
+import { IFeaturedVehicle } from "@/app/user/listvehicle/types/types";
+
+interface Props {
+  featuredVehicles: {
+    featuredVehicles: IFeaturedVehicle[];
+  };
+}
+
+export default function Featured(props: Props) {
+  const data = props.featuredVehicles.featuredVehicles.map(
+    (vehicle: IFeaturedVehicle) => {
+      return {
+        id: vehicle.vehicle_post_id,
+        name: vehicle.vehicle_name,
+        price: vehicle.vehicle_price,
+        image: vehicle.vehicle_image,
+      };
+    }
+  );
 
   return (
     <section className="mt-20 md:mt-10">
