@@ -82,7 +82,11 @@ const Navbar = async () => {
                   <DropdownMenuContent className="w-56">
                     <DropdownMenuLabel>{session?.user?.name}</DropdownMenuLabel>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem>Profile</DropdownMenuItem>
+                    <Link href={"/user/dashboard"}>
+                      <DropdownMenuItem className="cursor-pointer">
+                        Dashboard
+                      </DropdownMenuItem>
+                    </Link>
                     <DropdownMenuItem>Billing</DropdownMenuItem>
                     <DropdownMenuItem>Team</DropdownMenuItem>
                     <DropdownMenuItem>

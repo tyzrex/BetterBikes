@@ -30,3 +30,14 @@ export interface PostError {
   features: string;
   vehiclefile: string;
 }
+
+export interface IFeaturedResponse{
+  featuredVehicles: IFeaturedVehicle[]
+}
+export interface IFeaturedVehicle{
+    vehicle_name: string;
+    vehicle_image: string;
+    vehicle_post_id: string;
+    vehicle_price: number;
+}
+

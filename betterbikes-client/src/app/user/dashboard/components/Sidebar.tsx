@@ -18,7 +18,7 @@ export default function Sidebar() {
                     <li key={index}>
                       <Link
                         prefetch={false}
-                        href="#"
+                        href={item.href}
                         className="text-base text-gray-900 font-normal rounded-lg flex items-center p-2 hover:bg-gray-100 group"
                       >
                         <div className="w-6 h-6 text-accent-1 flex-shrink-0 group-hover:text-gray-900 transition duration-75">
