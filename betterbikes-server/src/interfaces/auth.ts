@@ -17,4 +17,5 @@ export interface IGoogleLogin{
     oAuthProvider: string;
     oAuthId: string;
     profileImage: string;
+    token: string;
 }

@@ -24,6 +24,17 @@ export interface IOauthUser{
     role: string
 }
 
+export interface IRegireredUserId{
+    user: {
+        id: string;
+    } | null;
+    oAuthUser: {
+        id: string;
+    } | null;
+    status: boolean;
+}
+
+
 export interface IRegisteredUser{
     user:IUser | null;
     oAuthUser: IOauthUser | null;

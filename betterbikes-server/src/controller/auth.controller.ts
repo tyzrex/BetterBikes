@@ -12,7 +12,9 @@ import { loginSchema, registerSchema } from "../validation/authValidation";
 import { type IGoogleLogin } from "@app/interfaces/auth";
 import AppError from "../utils/error";
 import ErrorHandler from "../utils/errorType";
+import { OAuth2Client } from "google-auth-library";
 
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 dotenv.config();
 
 export const RegisterUser = async (
@@ -62,7 +64,8 @@ export const CredentialLoginUser = async (
 
     const user = await loginWithCredentials(
       registeredUser,
-      credentials.password
+      credentials.password,
+      next
     );
     if (user) {
       res.status(200).json({
@@ -78,11 +81,29 @@ export const CredentialLoginUser = async (
 
 export const GoogleLoginUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const credentials = req.body as IGoogleLogin;
-    const registeredUser = await checkAlreadyRegistered(credentials.email);
+    const credentials = req.body;
+    console.log(req.body)
+    const ticket = await client.verifyIdToken({
+      idToken: credentials.token,
+      audience: process.env.GOOGLE_CLIENT_ID,
+    });
+    const payload = ticket.getPayload();
+    const registeredUser = await checkAlreadyRegistered(payload?.email as string);
+
 
     if (registeredUser?.status === false) {
-      const user = await createOauthUser(credentials);
+
+    const createCredentials = {
+      email: payload?.email,
+      name: payload?.name,
+      profileImage: payload?.picture,
+      oAuthId: payload?.sub,
+      oAuthProvider: "google",
+    };
+
+      const user = await createOauthUser(
+        createCredentials as IGoogleLogin
+      );
       if (user) {
         return res.status(200).json({
           user: user,
@@ -90,13 +111,14 @@ export const GoogleLoginUser = async (req: Request, res: Response, next: NextFun
         });
       }
     } else {
-      if (registeredUser?.user?.email === credentials.email) {
+      if (registeredUser?.user?.email === payload?.email) {
         return res.status(401).json({
           message:
             "This account was linked using credentials. Please sign in with your email and password",
         });
       } else {
         const user = await loginWithOAuth(registeredUser);
+        console.log(user)
         if (user) {
           return res.status(200).json({
             user: user,

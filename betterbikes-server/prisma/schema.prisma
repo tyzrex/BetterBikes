@@ -18,6 +18,7 @@ model User {
   address       String
   role          Role          @default(USER)
   vehicle_posts VehiclePost[]
+  Booking       Booking[]
 }
 
 model OAuthUser {
@@ -33,6 +34,7 @@ model OAuthUser {
   oAuth_id       String
   role           Role          @default(USER)
   vehicle_posts  VehiclePost[]
+  Booking        Booking[]
 }
 
 model VehiclePost {
@@ -44,14 +46,32 @@ model VehiclePost {
   vehicle_color       String
   vehicle_price       Float
   vehicle_brand       String
+  vehicle_name        String
   vehicle_description String
   vehicle_features    String[]
   created_at          DateTime   @default(now())
   updated_at          DateTime   @default(now())
-  owner_id            String
-  oAuthUserId         String?
-  OAuthUser           OAuthUser? @relation(fields: [oAuthUserId], references: [id])
-  owner               User       @relation(fields: [owner_id], references: [id])
+  authUserId          String?    @map("auth_user_id")
+  oauthUserId         String?    @map("oauth_user_id")
+  authUser            User?      @relation(fields: [authUserId], references: [id])
+  oauthUser           OAuthUser? @relation(fields: [oauthUserId], references: [id])
+  Booking             Booking[]
+}
+
+model Booking {
+  booking_id      String      @id @default(cuid())
+  vehicle_post_id String
+  auth_user_id    String?
+  oauth_user_id   String?
+  vehicle_post    VehiclePost @relation(fields: [vehicle_post_id], references: [vehicle_post_id])
+  auth_user       User?       @relation(fields: [auth_user_id], references: [id])
+  oauth_user      OAuthUser?  @relation(fields: [oauth_user_id], references: [id])
+  created_at      DateTime    @default(now())
+  updated_at      DateTime    @default(now())
+  start_date      DateTime
+  end_date        DateTime
+  total_price     Float
+  status          String
 }
 
 enum Role {

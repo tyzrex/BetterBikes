@@ -5,6 +5,8 @@ import bodyParser from 'body-parser';
 import { appRoutes } from './routes/main';
 import {errorMiddleware} from './middleware/errorHandler';
 import "express-async-errors"
+import { validateToken } from './middleware/validateToken';
+import fileUpload from "express-fileupload"
 dotenv.config();
 
 const app = express();
@@ -14,9 +16,17 @@ app.use(
     credentials: true,
   })
 );
+app.use(
+  fileUpload({
+    useTempFiles: true,
+  })
+);
+
 app.use(bodyParser.json());
 
-app.get('/', (req, res) => {
+
+
+app.post('/',validateToken, (req, res) => {
     res.send('Hello World!');
 });
 
