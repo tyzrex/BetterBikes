@@ -1,10 +1,11 @@
-
 import {prisma} from "../config/prisma"
 import jwt, { TokenExpiredError } from 'jsonwebtoken';
 import { generateRefreshToken, generateToken } from "../utils/generateToken";
 import { IGoogleLogin, IRegister } from "../interfaces/auth";
 import { IRegisteredResponse, IRegisteredUser } from "../interfaces/user";
 import bcrypt from "bcrypt";
+import { NextFunction } from "express";
+import AppError from "../utils/error";
 
 const accessExpireTime = new Date(
   Date.now() + 24 * 60 * 60 * 1000
@@ -87,6 +88,7 @@ throw err
 
 export const createOauthUser = async (userData: IGoogleLogin) => {
   try {
+
     const { email, name, profileImage, oAuthId, oAuthProvider} = userData;
     const oAuthUser = await prisma.oAuthUser.create({
         data: {
@@ -116,7 +118,7 @@ throw err
   }
 }
 
-export const loginWithCredentials = async (registeredUser: IRegisteredResponse, password: string) => {
+export const loginWithCredentials = async (registeredUser: IRegisteredResponse, password: string, next: NextFunction) => {
  try{
     const isPasswordValid = await bcrypt.compare(
     password,
@@ -124,7 +126,7 @@ export const loginWithCredentials = async (registeredUser: IRegisteredResponse, 
     );
 
     if (!isPasswordValid) {
-      throw new Error("Invalid Password");
+      return next(new AppError(401, "Invalid Credentials"))
     }
 
     const token = generateToken(registeredUser?.user?.id as string);
@@ -193,3 +195,46 @@ export const getRefreshToken = async (token: string) => {
     }
   }
 };
+
+export const checkUserType = async (id: string) => {
+  try{
+    const user = await prisma.user.findUnique({
+      where: {
+        id: id,
+        
+      },
+      
+    });
+
+    if (user) {
+      return {
+        user,
+        oAuthUser: null,
+        status: true,
+      };
+    }
+
+    const oAuthUser = await prisma.oAuthUser.findUnique({
+      where: {
+        id: id,
+      },
+    });
+
+    if (oAuthUser) {
+      return {
+        user: null,
+        oAuthUser,
+        status: true,
+      };
+    } 
+
+    return {
+        user: null,
+        oAuthUser: null,
+        status: false,
+      };
+  }
+  catch(err:any){
+throw err
+  }
+}
