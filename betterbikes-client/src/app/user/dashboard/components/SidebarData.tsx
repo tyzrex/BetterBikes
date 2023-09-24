@@ -28,7 +28,7 @@ export const sidebarItems: ISidebarItem[] = [
   {
     icon: <BsCartDash className="w-6 h-6" />,
     label: "Rent Requests",
-    href: "/user/dashboard/Bookings",
+    href: "/user/rent-requests",
   },
   {
     icon: <BsCartDash className="w-6 h-6" />,

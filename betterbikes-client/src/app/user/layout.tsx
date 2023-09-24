@@ -8,9 +8,9 @@ export default async function RootLayout({
   return (
     <>
       <Navbar />
-      <main className="flex justify-center overflow-hidden pt-16 bg-gray-50">
+      <main className="flex min-h-screen w-screen justify-center overflow-hidden pt-16 bg-gray-50">
         <Sidebar />
-        <article className="ml-16 xl:ml-60 w-[82%] md:w-[90%] flex-center xl:w-full lg:px-6 px-2 bg-gray-50">
+        <article className="ml-16 xl:ml-60 w-[82%] md:w-[90%] flex-center xl:w-full py-10 lg:px-6 px-2 bg-gray-50">
           {children}
         </article>
       </main>

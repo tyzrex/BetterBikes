@@ -91,6 +91,8 @@ export default function Booking(props: IBookingForm) {
     }
   };
 
+  console.log(startDate, endDate);
+
   return (
     <>
       <div>

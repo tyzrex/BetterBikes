@@ -39,3 +39,39 @@ export interface VehiclePost {
     oauthUserID:        string | null;
    }
 }
+
+export interface IBookingData {
+    dashboardData: DashboardData;
+}
+
+export interface DashboardData {
+    bookingRequests: BookingRequest[];
+    pages:           number;
+    previousPage:    string;
+    nextPage:        string;
+}
+
+export interface BookingRequest {
+    booking_id:      string;
+    start_date:      Date;
+    end_date:        Date;
+    vehicle_post_id: string;
+    authUser : {
+      name: string;
+    } | null;
+    oauthUser: {
+      name: string;
+    } | null;
+    vehicle_post:    BookingPost;
+}
+
+export interface BookingPost {
+  vehicle_post_id:  string;
+    vehicle_name:   string;
+    vehicle_image:  string;
+    vehicle_price:  number;
+    vehicle_type:   string;
+    created_at:     Date;
+    vehicle_brand:  string;
+    vehicle_number: string;
+}

@@ -2,7 +2,7 @@
 
 import { FcCalendar, FcList, FcPlanner } from "react-icons/fc";
 import { TbLocation } from "react-icons/tb";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { AiOutlineSearch } from "react-icons/ai";
 import { DatePickerWithPresets } from "../Reusables/Datepicker";

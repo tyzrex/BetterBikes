@@ -117,7 +117,7 @@
 
 
 ::-webkit-scrollbar {
-    width: 4px;
+    width: 0px;
 }
 
 /* Track */
@@ -165,7 +165,8 @@
 
 
 }
- 
+
+
 @layer base {
   :root {
     --background: 0 0% 100%;
