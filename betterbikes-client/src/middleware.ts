@@ -17,6 +17,11 @@ export async function middleware(request: NextRequest) {
       }
      
     }
+
+    //reload page after auth
+
+
+
     if(
       loggedInUserNotAccessiblePaths
     ){

@@ -1,0 +1,130 @@
+openapi: 3.0.3
+info:
+  title: BetterBikes
+servers:
+  - url: "http://localhost:5000/"
+paths:
+  /auth/register:
+    post:
+      summary: Register a new user.
+      description: Register a new user with the provided information.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                fullName:
+                  type: string
+                email:
+                  type: string
+                password:
+                  type: string
+                confirmPassword:
+                  type: string
+                address:
+                  type: string
+                phone:
+                  type: string
+              required:
+                - fullName
+                - email
+                - password
+                - confirmPassword
+                - address
+      responses:
+        "200":
+          description: User registered successfully. Proceed to login.
+        "400":
+          description: Bad request. Invalid request body.
+        "409":
+          description: Conflict. User with the provided email already exists.
+        "500":
+          description: Internal server error
+  /auth/login/credentials:
+    post:
+      summary: Login with credentials.
+      description: Login with the provided email and password.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+              required:
+                - email
+                - password
+      responses:
+        "200":
+          description: User logged in successfully.
+        "400":
+          description: Bad request. Invalid request body.
+        "401":
+          description: Unauthorized. User with the provided email does not exist.
+        "500":
+          description: Internal server error
+  /auth/login/google:
+    post:
+      summary: Login with Google credentials.
+      description: Login using Google credentials (OAuth2).
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                token:
+                  type: string
+              required:
+                - token
+      responses:
+        "200":
+          description: Successfully logged in.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    type: object
+                    properties:
+                      email:
+                        type: string
+                      name:
+                        type: string
+                      profileImage:
+                        type: string
+                  message:
+                    type: string
+                required:
+                  - user
+                  - message
+        "401":
+          description: Unauthorized. Account linked using credentials.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                  - message
+        "500":
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                  - message

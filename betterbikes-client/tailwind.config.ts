@@ -8,6 +8,9 @@ module.exports = {
     './src/**/*.{ts,tsx}',
 	],
   theme: {
+    //hide the scrollbar
+
+
     container: {
       center: true,
       padding: "2rem",
