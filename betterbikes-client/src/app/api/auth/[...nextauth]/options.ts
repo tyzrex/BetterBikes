@@ -50,7 +50,7 @@ export const options: NextAuthOptions = {
       },
     }),
   ],
-  secret: process.env.NEXT_SECRECT_KEY,
+  secret: process.env.NEXTAUTH_SECRET,
   session: {
     strategy: "jwt",
   },
@@ -79,12 +79,15 @@ export const options: NextAuthOptions = {
     async signIn({ user, account }) {
       try {
         if (account?.provider === "google") {
+          const formData = new FormData();
+          formData.append("token", account?.id_token as string);
           const response = await serverRequest(
             "/auth/login/google",
             "POST",
             {
               token: account?.id_token,
             }
+            
           );
           if (response) {
             user.access_token = response.user.access_token;

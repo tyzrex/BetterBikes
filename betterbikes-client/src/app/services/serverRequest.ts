@@ -36,14 +36,14 @@ export async function serverProtectedRequest (url: string, method: string,sessio
 }
 
 
-export async function serverRequest (url: string, method: string  ,body?: any) {
+export async function serverRequest (url: string, method: string  ,body?: any, config?: any) {
     try{
         const headers = new Headers(
             {
                 'Content-Type': 'application/json',
             }
         )
-
+        
         const response = await fetch(
         `${process.env.API_URL}${url}`, {
         method: method,

@@ -5,6 +5,7 @@ import Toast from "./components/Toast/Toast";
 import NextAuthProvider from "./provider/AuthProvider";
 import { Toaster } from "@/components/ui/toaster";
 import NextProgressBar from "nextjs-toploader";
+import { SocketProvider } from "./provider/SocketProvider";
 // import { getServerSession } from "next-auth";
 
 // const poppins = Poppins({
@@ -30,10 +31,12 @@ export default async function RootLayout({
       // className={poppins.className}
       >
         <NextAuthProvider>
-          <NextProgressBar color="#e73538" />
-          {children}
-          <Toast />
-          <Toaster />
+          <SocketProvider>
+            <NextProgressBar color="#e73538" />
+            {children}
+            <Toast />
+            <Toaster />
+          </SocketProvider>
         </NextAuthProvider>
       </body>
     </html>
