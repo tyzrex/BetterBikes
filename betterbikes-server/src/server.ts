@@ -5,8 +5,11 @@ import bodyParser from 'body-parser';
 import { appRoutes } from './routes/main';
 import {errorMiddleware} from './middleware/errorHandler';
 import "express-async-errors"
-import { validateToken } from './middleware/validateToken';
 import fileUpload from "express-fileupload"
+import socket, { Server, Socket } from "socket.io"
+
+import { createSocketConnection } from './socket';
+import swaggerDocs from './utils/swagger';
 dotenv.config();
 
 const app = express();
@@ -26,9 +29,9 @@ app.use(bodyParser.json());
 
 
 
-app.post('/',validateToken, (req, res) => {
-    res.send('Hello World!');
-});
+// app.get('/', (req, res) => {
+//     res.send('Hello World!');
+// });
 
 //app routes
 appRoutes(app)
@@ -36,10 +39,22 @@ app.use("*",errorMiddleware)
 
 
 const port = process.env.PORT;
-app.listen(port, () => {
+const server = app.listen(port, () => {
   console.log(`
   |=============================================|
     🖇️App listening at http://localhost:${port} 🖇️
   |=============================================|
   `);
 });
+
+const io = new Server (server, {
+  cors: {
+    origin: "http://localhost:3000",
+  }
+})
+
+app.set("socketio", io);
+createSocketConnection(io);
+
+swaggerDocs(app, 5000)
+

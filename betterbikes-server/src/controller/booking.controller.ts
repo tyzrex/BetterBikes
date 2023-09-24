@@ -21,6 +21,12 @@ export const BookVehicle = async (
     const user = res.locals.id;
     const userType = await checkUserType(user);
 
+    if (checkInDate.getTime() > checkOutDate.getTime()) {
+      return next(
+        new AppError(409, "Check In date cannot be greater than Check Out date")
+      );
+    }
+
     const isOwner = await checkOwner(userType, vehicle_post_id);
 
     if (isOwner) {

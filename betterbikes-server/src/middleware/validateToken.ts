@@ -3,7 +3,7 @@ import ErrorHandler from "../utils/errorType";
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
 
-interface IRefreshToken {
+interface IAccessToken {
   id: string;
   iat: number;
   exp: number;
@@ -19,7 +19,7 @@ export const validateToken = async (req: Request, res:Response, next: NextFuncti
       return res.status(401).json({ message: 'You are not authorized' });
     }
 
-    const decodedToken = jwt.verify(token, process.env.JWT_SECRET as string) as IRefreshToken;
+    const decodedToken = jwt.verify(token, process.env.JWT_SECRET as string) as IAccessToken;
     // req.body.id = decodedToken.id;
     res.locals.id = decodedToken.id;
     // console.log(decodedToken)

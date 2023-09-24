@@ -1,7 +1,6 @@
 import { prisma } from "../config/prisma";
 import { v2 as cloudinary } from "cloudinary";
 import dotenv from "dotenv";
-import { Request, Response } from "express";
 import { UploadedFile } from "express-fileupload";
 import { IVehiclePost } from "../interfaces/vehiclePost";
 import { IRegisteredUser } from "@app/interfaces/user";

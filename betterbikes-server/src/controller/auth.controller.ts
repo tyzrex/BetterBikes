@@ -44,6 +44,8 @@ export const RegisterUser = async (
   }
 };
 
+
+
 export const CredentialLoginUser = async (
   req: Request,
   res: Response,
