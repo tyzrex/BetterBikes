@@ -2,7 +2,7 @@ import Form from "./components/Form";
 
 export default async function ListVehicle() {
   return (
-    <article className="w-full max-w-[90%] mx-auto py-10">
+    <article className="w-full max-w-[90%] mx-auto">
       <div className="">
         <div className="flex justify-between mx-auto">
           <div className="w-full">
