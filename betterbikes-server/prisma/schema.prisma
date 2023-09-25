@@ -19,6 +19,7 @@ model User {
   role          Role          @default(USER)
   vehicle_posts VehiclePost[]
   Booking       Booking[]
+  Profile       Profile?
 }
 
 model OAuthUser {
@@ -35,6 +36,7 @@ model OAuthUser {
   role           Role          @default(USER)
   vehicle_posts  VehiclePost[]
   Booking        Booking[]
+  Profile        Profile?
 }
 
 model VehiclePost {
@@ -72,6 +74,59 @@ model Booking {
   end_date        DateTime
   total_price     Float
   status          String
+}
+
+model Profile {
+  id        String   @id @default(uuid())
+  name      String
+  email     String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user_id String?
+  user    User?   @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  oauth_user_id          String?
+  oauth_user             OAuthUser?     @relation(fields: [oauth_user_id], references: [id], onDelete: Cascade)
+  conversationsInitiated Conversation[] @relation("ProfileOne")
+  conversationsReceived  Conversation[] @relation("ProfileTwo")
+
+  @@unique([oauth_user_id])
+  @@unique([user_id])
+}
+
+model Conversation {
+  id String @id @default(uuid())
+
+  profileOneId String
+  profileOne   Profile @relation("ProfileOne", fields: [profileOneId], references: [id], onDelete: Cascade)
+
+  profileTwoId String
+  profileTwo   Profile @relation("ProfileTwo", fields: [profileTwoId], references: [id], onDelete: Cascade)
+
+  directMessages DirectMessage[]
+
+  @@unique([profileOneId, profileTwoId])
+  @@index([profileTwoId])
+}
+
+model DirectMessage {
+  id      String  @id @default(uuid())
+  content String  @db.Text
+  fileUrl String? @db.Text
+
+  memberId String
+
+  conversationId String
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+
+  deleted Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([memberId])
+  @@index([conversationId])
 }
 
 enum Role {
