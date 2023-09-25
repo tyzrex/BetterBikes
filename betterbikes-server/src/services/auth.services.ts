@@ -79,6 +79,7 @@ export const createUser = async (userData: IRegister) => {
         address,
       },
     });
+
     return user;
   }
   catch(err:any){
