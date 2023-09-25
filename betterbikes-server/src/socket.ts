@@ -3,11 +3,13 @@ import { prisma } from "./config/prisma";
 import { checkUserType } from "./services/auth.services";
 
 import { Server, Socket } from "socket.io";
+import { Request } from "express";
 
 enum ChatEventEnum {
   JOIN_CHAT_EVENT = "join_chat",
   TYPING_EVENT = "typing",
   STOP_TYPING_EVENT = "stop_typing",
+  LEAVE_CHAT_EVENT = "leave_chat",
 }
 
 interface ChatSocket extends Socket {
@@ -48,44 +50,56 @@ const mountParticipantStoppedTypingEvent = (socket: ChatSocket) => {
   });
 };
 
-
 interface IAccessToken {
-    id: string;
-    iat: number;
-    exp: number;
+  id: string;
+  iat: number;
+  exp: number;
 }
 export const createSocketConnection = (io: any) => {
-    return io.on("connection", async (socket: any) => {
+  return io.on("connection", async (socket: any) => {
+    try {
+      const token = socket.handshake.auth.token;
 
-        const token = socket.handshake.auth.token;
+      if (!token) {
+        socket.disconnect();
+      }
 
-        if(!token){
-            socket.disconnect()
-        }
-        
-       const decodedToken = jwt.verify(token, process.env.JWT_SECRET as string) as IAccessToken;
-        const user = await checkUserType(decodedToken.id)
+      const decodedToken = jwt.verify(
+        token,
+        process.env.JWT_SECRET as string
+      ) as IAccessToken;
+      const user = await checkUserType(decodedToken.id);
 
-        if(!user){
-            socket.disconnect()
-        }
+      if (!user) {
+        socket.disconnect();
+      }
 
-        socket.user = user.user || user.oAuthUser 
+      socket.user = user.user || user.oAuthUser;
 
-        socket.join(socket.user.id)
-        socket.emit("connected", {message: "connected"})
+      socket.join(socket.user.id);
+      socket.emit("connected", { message: "connected" });
 
-        console.log('User connected: ', socket.user.name);
+      console.log("User connected: ", socket.user.name);
 
-        mountJoinChatEvent(socket);
-        mountParticipantTypingEvent(socket);
-        mountParticipantStoppedTypingEvent(socket);
-        
+      mountJoinChatEvent(socket);
+      mountParticipantTypingEvent(socket);
+      mountParticipantStoppedTypingEvent(socket);
 
-        socket.on("disconnect", () => {
-            console.log("User disconnected: ", socket.user.name);
-        }
-    );
-    });
-}
+      socket.on("disconnect", () => {
+        console.log("User disconnected: ", socket.user.name);
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  });
+};
 
+export const emitSocketEvent = (
+  req: Request,
+  roomId: string,
+  event: any,
+  payload: any
+) => {
+
+  req.app.get("io").in(roomId).emit(event, payload);
+};

@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import {
   checkAlreadyRegistered,
+  checkUserType,
   createOauthUser,
   createUser,
   getRefreshToken,
@@ -9,10 +10,11 @@ import {
 } from "../services/auth.services";
 import dotenv from "dotenv";
 import { loginSchema, registerSchema } from "../validation/authValidation";
-import { type IGoogleLogin } from "@app/interfaces/auth";
+import { type IGoogleLogin } from "../interfaces/auth";
 import AppError from "../utils/error";
 import ErrorHandler from "../utils/errorType";
 import { OAuth2Client } from "google-auth-library";
+import { prisma } from "../config/prisma";
 
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 dotenv.config();
@@ -32,6 +34,18 @@ export const RegisterUser = async (
     }
 
     const user = await createUser(userData);
+
+    if(user){
+      const createProfile = await prisma.profile.create({
+        data:{
+          id: user.id,
+          name: user.name,
+          oauth_user_id: null,
+          user_id: user.id,
+          email: user.email,
+        }
+      })
+    }
 
     if (user) {
       res.status(200).json({
@@ -106,6 +120,17 @@ export const GoogleLoginUser = async (req: Request, res: Response, next: NextFun
       const user = await createOauthUser(
         createCredentials as IGoogleLogin
       );
+      if(user){
+        const profile = await prisma.profile.create({
+          data:{
+            id: user.id,
+            name: user.name,
+            oauth_user_id: user.id,
+            user_id: null,
+            email: user.email,
+          }
+        })
+      }
       if (user) {
         return res.status(200).json({
           user: user,

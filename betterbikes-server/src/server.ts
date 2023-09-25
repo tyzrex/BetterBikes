@@ -53,7 +53,7 @@ const io = new Server (server, {
   }
 })
 
-app.set("socketio", io);
+app.set("io", io);
 createSocketConnection(io);
 
 swaggerDocs(app, 5000)
