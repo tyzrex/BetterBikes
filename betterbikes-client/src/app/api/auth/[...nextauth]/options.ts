@@ -62,7 +62,7 @@ export const options: NextAuthOptions = {
   callbacks: {
     async session({ session, token }) {
       session.user = token as any;
-
+    
       if (new Date(session.user.accessExpireTime) <= new Date()) {
         console.log("Access token is expired or about to expire");
         const response = await serverRequest(
@@ -72,7 +72,8 @@ export const options: NextAuthOptions = {
             token: session.user.refreshToken,
           }
         );
-        session.user.access_token = response.data.newAccessToken;
+        console.log(response)
+        session.user.access_token = response.newAccessToken;
       }
       return session;
     },
@@ -90,6 +91,7 @@ export const options: NextAuthOptions = {
             
           );
           if (response) {
+            user.id = response.user.id
             user.access_token = response.user.access_token;
             user.refreshToken = response.user.refreshToken;
             user.accessExpireTime = response.user.accessExpireTime;
