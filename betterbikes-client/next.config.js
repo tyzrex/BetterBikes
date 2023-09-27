@@ -34,6 +34,9 @@ const nextConfig = {
     GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
     NEXTAUTH_SECRECT: process.env.NEXTAUTH_SECRECT,
   },
+  experimental: {
+    serverActions: true,
+  },
 };
 
 module.exports = nextConfig;

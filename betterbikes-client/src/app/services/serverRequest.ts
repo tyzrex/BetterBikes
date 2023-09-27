@@ -1,7 +1,9 @@
 import { Session } from "next-auth"
+import "server-only"
 
 export async function serverProtectedRequest (url: string, method: string,session?: Session|null  ,body?: any) {
     try{
+
         const headers = new Headers(
             {
                 'Content-Type': 'application/json',
@@ -10,6 +12,8 @@ export async function serverProtectedRequest (url: string, method: string,sessio
         if(session){
             headers.append('Authorization', `Bearer ${session.user.access_token}`)
         }
+
+        
 
         const response = await fetch(
         `${process.env.API_URL}${url}`, {
@@ -22,7 +26,6 @@ export async function serverProtectedRequest (url: string, method: string,sessio
           return data
     }
     else{
-
         throw {
             status: response.status,
             message: data.message
