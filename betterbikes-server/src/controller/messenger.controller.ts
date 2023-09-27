@@ -99,12 +99,12 @@ export const getUserConversations = async (
         },
       },
     });
-
     res.status(200).json({
 
       conversations,
     });
   } catch (err: any) {
+
     const errors = ErrorHandler(err);
     next(new AppError(errors.statusCode, errors.message));
   }

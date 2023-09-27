@@ -1,16 +1,12 @@
 "use client";
-import { useEffect, useState } from "react";
-import { FileData } from "../types/types";
-import { BiFile } from "react-icons/bi";
+
 import { VehicleSchema, VehicleSchemaType } from "../schema/listSchema";
 import { useFieldArray, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import InputField from "./InputField";
-import { BsTrash2Fill } from "react-icons/bs";
 import VehicleCard from "../../../(public)/components/Reusables/VehicleCards";
 import { PostRequest } from "@/app/services/httpRequest";
 import { useToast } from "@/components/ui/use-toast";
-import { useSession } from "next-auth/react";
 
 export default function Form() {
   const {
