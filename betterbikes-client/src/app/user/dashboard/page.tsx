@@ -1,7 +1,6 @@
 import { getDashboardData } from "@/api/dashboard";
 import CardGrid from "./components/CardGrid";
-import Customers from "./components/Customers";
-import Transactions from "./components/Transactions";
+
 import Table from "./components/reusables/Table";
 import { Session, getServerSession } from "next-auth";
 import { options } from "@/app/api/auth/[...nextauth]/options";
