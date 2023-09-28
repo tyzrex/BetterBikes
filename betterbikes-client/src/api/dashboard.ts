@@ -15,7 +15,7 @@ export const getDashboardData = async (
     try{
         const pageParam = params?.page ? `?page=${params?.page}` : "";
 
-        const response = await serverProtectedRequest(`/dashboard-data/${pageParam}`, "GET", session);
+        const response = await serverProtectedRequest(`/dashboard/dashboard-data/${pageParam}`, "GET", session);
         return response;
     }
     catch(error){
