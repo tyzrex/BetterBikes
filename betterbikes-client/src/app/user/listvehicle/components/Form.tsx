@@ -44,11 +44,15 @@ export default function Form() {
       JSON.stringify(data.vehicleFeatures.map((feature) => feature.feature))
     );
     try {
-      const response = await PostRequest("/vehicle/list-vehicle", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      const response = await PostRequest(
+        "/vehiclepost/list-vehicle",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
       if (response?.status === 201) {
         toast({
           title: `${response.data.msg}`,
@@ -59,6 +63,7 @@ export default function Form() {
         throw new Error(response?.data.message);
       }
     } catch (error: any) {
+      console.log(error);
       toast({
         title: `${error.data.message}`,
         description: new Date().toTimeString(),
@@ -74,7 +79,7 @@ export default function Form() {
 
   return (
     <div className="flex flex-col items-start gap-10 md:flex-row md:items-start justify-between">
-      <section className="md:w-[60%] xl:w-[70%] w-full">
+      <div className="md:w-[60%] xl:w-[70%] w-full">
         <form onSubmit={handleSubmit(onSubmit)} method="POST">
           <div className="grid grid-cols-1 gap-6 mt-4 ">
             <div className="grid grid-cols-1 gap-6 mt-4 ">
@@ -234,9 +239,9 @@ export default function Form() {
             </button>
           </div>
         </form>
-      </section>
+      </div>
 
-      <section className="md:block md:sticky top-5">
+      <div className="md:block md:sticky top-5">
         <div className="md:max-w-[40%] xl:max-w-[25%] ">
           <h1 className="text-[34px] md:hidden block font-semibold text-gray-800 dark:text-accent-1">
             Card Preview
@@ -245,9 +250,7 @@ export default function Form() {
             <VehicleCard
               vehicleName={watchAllFields.vehicleName}
               vehicleImage={
-                watchAllFields.vehicleImage
-                  ? watchAllFields.vehicleImage[0]
-                  : ""
+                watchAllFields.vehicleImage && watchAllFields.vehicleImage[0]
               }
               vehiclePrice={watchAllFields.vehiclePrice}
               key={watchAllFields.vehicleName}
@@ -258,7 +261,7 @@ export default function Form() {
             />
           </div>
         </div>
-      </section>
+      </div>
     </div>
   );
 }

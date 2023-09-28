@@ -74,6 +74,9 @@ export const options: NextAuthOptions = {
         );
         console.log(response)
         session.user.access_token = response.newAccessToken;
+        session.user.accessExpireTime = response.accessExpireTime;
+        session.user.refreshExpireTime = response.refreshExpireTime;
+        session.user.refreshToken = response.refreshToken;
       }
       return session;
     },

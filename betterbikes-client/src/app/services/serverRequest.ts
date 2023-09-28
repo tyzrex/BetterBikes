@@ -39,13 +39,14 @@ export async function serverProtectedRequest (url: string, method: string,sessio
 }
 
 
-export async function serverRequest (url: string, method: string  ,body?: any, config?: any) {
+export async function serverRequest (url: string, method: string  ,body?: any) {
     try{
         const headers = new Headers(
             {
                 'Content-Type': 'application/json',
             }
         )
+        console.log(`${process.env.API_URL}${url}`)
         
         const response = await fetch(
         `${process.env.API_URL}${url}`, {
@@ -54,6 +55,7 @@ export async function serverRequest (url: string, method: string  ,body?: any, c
         body: JSON.stringify(body)
     })
     const data = await response.json()
+    console.log(data)
     if(response.status === 200){
           return data
     }

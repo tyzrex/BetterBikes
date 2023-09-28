@@ -15,7 +15,6 @@ const getConversations = async (session: Session | null) => {
 
 export default async function Messenger() {
   const session = await getServerSession(options);
-  console.log(session);
   const conversations: IChatsResponse = await getConversations(session);
 
   const conversationInfo = conversations?.conversations.map((conversation) => {
@@ -41,8 +40,6 @@ export default async function Messenger() {
       };
     }
   });
-
-  console.log(conversationInfo);
 
   return (
     <>

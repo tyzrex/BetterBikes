@@ -194,6 +194,8 @@ export const createConversationSuggestions = async (
       },
     });
 
+    console.log(suggestions);
+
     res.status(200).json({
       suggestions,
     });
