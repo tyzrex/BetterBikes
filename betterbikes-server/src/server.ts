@@ -2,11 +2,12 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import bodyParser from 'body-parser';
-import { appRoutes } from './routes/main';
+import appRoutes from './routes/main';
 import {errorMiddleware} from './middleware/errorHandler';
 import "express-async-errors"
 import fileUpload from "express-fileupload"
 import socket, { Server, Socket } from "socket.io"
+
 
 import { createSocketConnection } from './socket';
 import swaggerDocs from './utils/swagger';
@@ -34,7 +35,8 @@ app.use(bodyParser.json());
 // });
 
 //app routes
-appRoutes(app)
+app.use(appRoutes);
+
 app.use("*",errorMiddleware)
 
 

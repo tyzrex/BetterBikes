@@ -1,10 +1,12 @@
 import { CredentialLoginUser, GoogleLoginUser, RefreshToken, RegisterUser } from "../controller/auth.controller"
+import { Router } from "express"
 
-export const authRoutes = (app: any) => {
+const router = Router()
 
-    app.post("/auth/register", RegisterUser)
-    app.post("/auth/login/credentials", CredentialLoginUser)
-    app.post("/auth/login/google",GoogleLoginUser)
-    app.post("/auth/refresh-token", RefreshToken)
+router.post("/register", RegisterUser)
+router.post("/login/credentials", CredentialLoginUser)
+router.post("/login/google",GoogleLoginUser)
+router.post("/refresh-token", RefreshToken)
 
-}
+export const authRoutes = router
+

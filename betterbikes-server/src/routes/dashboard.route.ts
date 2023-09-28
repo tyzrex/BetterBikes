@@ -1,7 +1,10 @@
 import { DashboardBookingData, DashboardData } from "../controller/dashboard.controller"
 import { validateToken } from "../middleware/validateToken"
+import { Router } from "express"
 
-export const DashboardRoutes = (app: any) => {
-    app.get("/dashboard-data", validateToken, DashboardData)
-    app.get("/dashboard/booking-requests", validateToken, DashboardBookingData)
-}
+const router = Router()
+
+router.get("/dashboard-data", validateToken, DashboardData)
+router.get("/booking-requests", validateToken, DashboardBookingData)
+
+export const DashboardRoutes = router

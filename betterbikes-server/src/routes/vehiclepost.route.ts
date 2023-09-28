@@ -1,9 +1,12 @@
 import { GetFeaturedVehicles, GetVehicleDetail, PostVehicle, SearchVehicle } from "../controller/vehiclepost.controller"
 import { validateToken } from "../middleware/validateToken"
+import { Router } from "express"
 
-export const vehiclePostRoutes = (app: any) => {    
-    app.post("/vehicle/list-vehicle", validateToken, PostVehicle)
-    app.get("/vehicle/search-vehicle", SearchVehicle)
-    app.get("/vehicle/featured-vehicles", GetFeaturedVehicles)
-    app.get("/vehicle/vehicle-detail/:id", GetVehicleDetail)
-}
+const router = Router()
+
+router.post("/list-vehicle", validateToken, PostVehicle)
+router.get("/search-vehicle", SearchVehicle)
+router.get("/featured-vehicles", GetFeaturedVehicles)
+router.get("/vehicle-detail/:id", GetVehicleDetail)
+
+export const vehiclePostRoutes = router

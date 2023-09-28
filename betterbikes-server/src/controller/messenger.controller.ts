@@ -149,3 +149,56 @@ export const getConversationMessages = async (
     next(new AppError(errors.statusCode, errors.message));
   }
 }
+
+export const createConversation = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const senderId = res.locals.id;
+    const receiverId = req.body.receiver;
+    const conversation = await getOrCreateConversation(
+      senderId,
+      receiverId,
+      res
+    );
+    res.status(200).json({
+      conversation,
+    });
+  } catch (err: any) {
+    const errors = ErrorHandler(err);
+    next(new AppError(errors.statusCode, errors.message));
+  }
+}
+
+
+export const createConversationSuggestions = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const name = req.query.name as string;
+
+    const suggestions = await prisma.profile.findMany({
+      where: {
+        name: {
+          contains: name,
+          mode: "insensitive",
+        },
+      },
+      select: {
+        id: true,
+        name: true,
+      },
+    });
+
+    res.status(200).json({
+      suggestions,
+    });
+  } catch (err: any) {
+    const errors = ErrorHandler(err);
+    next(new AppError(errors.statusCode, errors.message));
+  }
+}

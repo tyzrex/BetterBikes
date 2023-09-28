@@ -1,8 +1,14 @@
-import { getConversationMessages, getUserConversations, sendMessage } from "../controller/messenger.controller"
+import { createConversation, createConversationSuggestions, getConversationMessages, getUserConversations, sendMessage } from "../controller/messenger.controller"
 import { validateToken } from "../middleware/validateToken"
+import { Router } from "express"
 
-export const messengerRoutes = (app: any) => {
-    app.post("/messenger/send", validateToken, sendMessage)
-    app.get("/messenger/get-conversations", validateToken, getUserConversations)
-    app.get("/messenger/conversation/:id", validateToken, getConversationMessages)
-}
+const router = Router()
+
+router.post("/send", validateToken, sendMessage)
+router.get("/get-conversations", validateToken, getUserConversations)
+router.get("/conversation/:id", validateToken, getConversationMessages)
+router.get("/create-conversation", validateToken, createConversation)
+router.get("/create-conversation-suggestions", validateToken, createConversationSuggestions)
+
+
+export default router
