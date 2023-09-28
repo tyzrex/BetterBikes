@@ -10,6 +10,7 @@ import VehicleCard from "../Reusables/VehicleCards";
 import { useState } from "react";
 import { Swiper as SwiperType } from "swiper";
 import CardLoader from "../Reusables/CardLoader";
+import Link from "next/link";
 
 const pagination = {
   renderBullet: function (_index: number, className: string) {
@@ -61,16 +62,18 @@ export default function CardsSwiper({ data }: any) {
             data?.map((item: any, index: number) => {
               return (
                 <SwiperSlide key={index} className="mb-10">
-                  <VehicleCard
-                    key={index}
-                    vehicleName={item.name}
-                    vehicleImage={item.image}
-                    vehicleLocation="Kathmandu"
-                    vehicleRating="4.5"
-                    vehiclePrice={item.price}
-                    buttonText="Book"
-                    postId={item.id}
-                  />
+                  <Link href={`/vehicle-detail?id=${item.id}`}>
+                    <VehicleCard
+                      key={index}
+                      vehicleName={item.name}
+                      vehicleImage={item.image}
+                      vehicleLocation="Kathmandu"
+                      vehicleRating="4.5"
+                      vehiclePrice={item.price}
+                      buttonText="Book"
+                      postId={item.id}
+                    />
+                  </Link>
                 </SwiperSlide>
               );
             })

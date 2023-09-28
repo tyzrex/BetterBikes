@@ -6,7 +6,11 @@ import MyMessage from "./_components/myMessage";
 import { AiOutlineSend } from "react-icons/ai";
 import { useEffect, useState } from "react";
 import { IChatsResponse, ISelectedConversation } from "../interfaces/chats";
-import { getConversationMessages, sendMessage } from "@/api/messenger";
+import {
+  getConversationMessages,
+  getConversationRecommendations,
+  sendMessage,
+} from "@/api/messenger";
 interface Props {
   chats?: IChatsResponse;
   info?: (IChatInfo | undefined)[];
@@ -28,6 +32,12 @@ export default function MessengerPage(props: Props) {
   const [messages, setMessages] = useState<string[]>([]);
   const [message, setMessage] = useState("");
   const [selectedChat, setSelectedChat] = useState<IChatInfo>();
+  const [search, setSearch] = useState("");
+  const [suggest, setSuggest] = useState<any>([]);
+
+  const handleConversationSearch = (e: any) => {
+    setSearch(e.target.value);
+  };
 
   const handleClick = async () => {
     try {
@@ -58,11 +68,69 @@ export default function MessengerPage(props: Props) {
     }
   }, [selectedChat]);
 
+  useEffect(() => {
+    //use debounce here
+
+    if (search.length > 0) {
+      const suggestions = async () => {
+        await getConversationRecommendations(search).then((response) => {
+          setSuggest(response);
+        });
+      };
+      suggestions();
+      console.log(suggest);
+    } else {
+      setSuggest([]);
+    }
+  }, [search.length]);
+
   return (
     <>
       <div className="h-[80vh] w-full flex flex-col md:flex-row gap-10 antialiased text-main-foreground overflow-hidden">
         <div className="w-auto h-auto md:h-full md:border-r md:pr-4 md:border-r-gray-200">
           <h1 className="text-2xl font-bold mb-4">Chats</h1>
+
+          <div className="flex flex-row justify-between items-center mb-4 relative">
+            <div className="flex-1 relative">
+              <label>
+                <input
+                  className="rounded-md py-2 pl-3 pr-10 w-full border 0 focus:outline-none text-main-foreground "
+                  type="text"
+                  placeholder="Add Conversations"
+                  onChange={handleConversationSearch}
+                />
+              </label>
+            </div>
+          </div>
+
+          {suggest.suggestions ? (
+            <div className="absolute bg-white rounded-md shadow-lg">
+              {suggest?.suggestions.map((suggestion: any, index: number) => {
+                return (
+                  <div className="flex flex-row items-center" key={index}>
+                    <div className="w-12 h-12 mr-4 relative flex flex-shrink-0">
+                      <div className="w-12 h-12 rounded-full mx-auto bg-gray-200 flex-center">
+                        {suggestion.name.charAt(0)}
+                      </div>
+                    </div>
+                    <div className="text-sm">
+                      <p className="font-bold">{suggestion.name}</p>
+                    </div>
+                    <button
+                      onClick={() => {
+                        setSelectedChat(suggestion);
+                      }}
+                      className="accent-btn p-2 rounded-full ml-5"
+                    >
+                      <AiOutlineSend className="w-5 h-5" />
+                    </button>
+                  </div>
+                );
+              })}
+            </div>
+          ) : (
+            <></>
+          )}
 
           <div className="flex flex-row lg:flex-col gap-4">
             {props?.info ? (
@@ -83,7 +151,7 @@ export default function MessengerPage(props: Props) {
               <>
                 <div className="flex-1 flex flex-col justify-center items-center">
                   <p className="text-2xl font-bold">
-                    Select a chat to start messaging
+                    No chats available. Start a new chat adding people
                   </p>
                 </div>
               </>
@@ -129,7 +197,7 @@ export default function MessengerPage(props: Props) {
                     <div className="relative flex-grow">
                       <label>
                         <input
-                          className="rounded-full py-2 pl-3 pr-10 w-full border 0 focus:outline-none text-gray-200 "
+                          className="rounded-md py-2 pl-3 pr-10 w-full border 0 focus:outline-none text-main-foreground "
                           type="text"
                           value={message}
                           onChange={(e) => setMessage(e.target.value)}

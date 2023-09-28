@@ -1,12 +1,11 @@
 "use client";
 
-import { getSession } from "next-auth/react";
-import { revalidatePath } from "next/cache";
+import { initSession } from "@/api/messenger";
 import { createContext, useContext, useEffect, useRef, useState } from "react";
 import io from "socket.io-client";
 
 const getSocket = async () => {
-  const session = await getSession();
+  const session = await initSession();
   if (!session) {
     throw new Error("User session not found.");
   }
