@@ -1,7 +1,7 @@
 import { Session } from "next-auth"
 import "server-only"
 
-export async function serverProtectedRequest (url: string, method: string,session?: Session|null  ,body?: any) {
+export async function serverProtectedRequest (url: string, method: string,session?: Session|null  ,body?: any, caching?: any) {
     try{
 
         const headers = new Headers(
@@ -19,7 +19,8 @@ export async function serverProtectedRequest (url: string, method: string,sessio
         `${process.env.API_URL}${url}`, {
         method: method,
         headers: headers,
-        body: JSON.stringify(body)
+        body: JSON.stringify(body),
+        cache: caching ? caching : 'no-cache'
     })
     const data = await response.json()
     if(response.status === 200){
