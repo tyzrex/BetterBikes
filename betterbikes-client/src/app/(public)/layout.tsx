@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Navbar from "../components/Navbar/Navbar";
 import Footer from "../components/Footer/Footer";
+import BreadCrumbs from "./components/Reusables/BreadCrumb";
 
 export const metadata: Metadata = {
   title: "BetterBikes - Rent a Two Wheeler Vehicle Online",
@@ -16,6 +17,7 @@ export default function RootLayout({
   return (
     <div>
       <Navbar />
+      {/* <BreadCrumbs /> */}
       {children}
       <Footer />
     </div>
