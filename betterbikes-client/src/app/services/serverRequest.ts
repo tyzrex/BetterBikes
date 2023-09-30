@@ -1,5 +1,5 @@
 import { Session } from "next-auth"
-import "server-only"
+// import "server-only"
 
 export async function serverProtectedRequest (url: string, method: string,session?: Session|null  ,body?: any, caching?: any) {
     try{
@@ -22,6 +22,7 @@ export async function serverProtectedRequest (url: string, method: string,sessio
         body: JSON.stringify(body),
         cache: caching ? caching : 'no-cache'
     })
+
     const data = await response.json()
     if(response.status === 200){
           return data
@@ -47,13 +48,13 @@ export async function serverRequest (url: string, method: string  ,body?: any) {
                 'Content-Type': 'application/json',
             }
         )
-        console.log(`${process.env.API_URL}${url}`)
         
         const response = await fetch(
         `${process.env.API_URL}${url}`, {
         method: method,
         headers: headers,
-        body: JSON.stringify(body)
+        body: JSON.stringify(body),
+        cache: 'no-cache'
     })
     const data = await response.json()
     console.log(data)
