@@ -7,6 +7,9 @@ import { Calendar } from "@/components/ui/calendar";
 import { PostRequest } from "@/app/services/httpRequest";
 import { useSearchParams } from "next/navigation";
 import { useToast } from "@/components/ui/use-toast";
+import { serverRequest } from "@/app/services/serverRequest";
+import { bookVehicle } from "@/api/booking";
+import { revalidatePath } from "next/cache";
 
 const bookingFormSchema = z.object({
   checkIn: z.string().nonempty("Please select a check-in date to continue"),
@@ -71,7 +74,7 @@ export default function Booking(props: IBookingForm) {
     if (validateForm(formData)) {
       // Perform the actual submission here
       try {
-        const response = await PostRequest("/vehicle/book-vehicle", formData);
+        const response = await bookVehicle(formData);
         if (response.status === 200) {
           console.log(response);
           toast({
@@ -81,12 +84,12 @@ export default function Booking(props: IBookingForm) {
           });
         }
       } catch (err: any) {
+        console.log(err.message.message);
         toast({
           title: "Error",
-          description: err.data.message,
+          description: "Cannot book vehicle at the moment",
           variant: "destructive",
         });
-        console.log(err);
       }
     }
   };
