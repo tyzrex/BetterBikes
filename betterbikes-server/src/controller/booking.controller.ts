@@ -7,6 +7,8 @@ import {
   checkOwner,
   createBooking,
 } from "../services/booking.services";
+import { prisma } from "../config/prisma";
+import { emitSocketEvent } from "../socket";
 
 export const BookVehicle = async (
   req: Request,
@@ -28,6 +30,16 @@ export const BookVehicle = async (
     }
 
     const isOwner = await checkOwner(userType, vehicle_post_id);
+    const getOwnerId = await prisma.vehiclePost.findFirst({
+      where: {
+        vehicle_post_id: vehicle_post_id,
+      },
+      select: {
+        authUserId: true,
+        oauthUserId: true,
+      },
+    });
+
 
     if (isOwner) {
       return next(new AppError(409, "You cannot book your own vehicle"));
@@ -57,6 +69,15 @@ export const BookVehicle = async (
 
     if (booking) {
       console.log(booking);
+      const owner = getOwnerId?.authUserId ? getOwnerId.authUserId : getOwnerId?.oauthUserId as string;
+      console.log(owner);
+      emitSocketEvent(req, owner, "booking", {
+        booking_id: booking.booking_id,
+        vehicle_post_id: booking.vehicle_post_id,
+        start_date: booking.start_date,
+        end_date: booking.end_date,
+      }
+      );
       res.status(200).json({
         message: "Booking Successful",
         booking_id: booking.booking_id,
@@ -67,3 +88,35 @@ export const BookVehicle = async (
     next(new AppError(errors.statusCode, errors.message));
   }
 };
+
+export const AcceptBookingRequest = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const bookingId = req.params.id;
+    console.log(bookingId);
+    const booking = await prisma.booking.update({
+      where: {
+        booking_id: bookingId,
+      },
+      data: {
+        status: "accepted",
+      },
+    });
+    // emitSocketEvent(req, booking.auth_user_id, "booking", {
+    //   booking_id: booking.booking_id,
+    //   vehicle_post_id: booking.vehicle_post_id,
+    //   start_date: booking.start_date,
+    //   end_date: booking.end_date,
+    //   status: booking.status,
+    // });
+    res.status(200).json({
+      message: "Booking request accepted",
+    });
+  } catch (err: any) {
+    const errors = ErrorHandler(err);
+    next(new AppError(errors.statusCode, errors.message));
+  }
+}

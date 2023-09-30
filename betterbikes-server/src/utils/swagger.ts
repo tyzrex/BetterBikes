@@ -12,7 +12,7 @@ function swaggerDocs(app: Express, port: number) {
 
     // Swagger page
     app.use(
-      "/",
+      "/docs",
       swaggerUi.serve,
       swaggerUi.setup(swaggerDefinition, {
 

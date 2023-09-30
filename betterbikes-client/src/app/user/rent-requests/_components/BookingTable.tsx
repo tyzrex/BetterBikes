@@ -3,6 +3,7 @@ import Link from "next/link";
 import { BookingRequest, IBookingData } from "@/app/user/interfaces/vehicle";
 import Image from "next/image";
 import { convertToLocalTime } from "@/lib/localTime";
+import ActionButtons from "./actions";
 interface TableProps {
   data: IBookingData;
   searchParams?: { [key: string]: string | string[] | undefined };
@@ -10,12 +11,11 @@ interface TableProps {
 
 export default function BookingTable(props: TableProps) {
   const data = props?.data?.dashboardData;
-  console.log(data);
   const params = props.searchParams;
 
   return (
     <>
-      <section className="my-10 relative  rounded-2xl ">
+      <section className="relative rounded-2xl ">
         <div className="px-4 md:px-10 py-4 md:py-7 bg-white border-b border-b-gray-100 rounded-xl ">
           <div className="flex items-center justify-between">
             <div>
@@ -40,6 +40,7 @@ export default function BookingTable(props: TableProps) {
                 <th className="font-normal text-left px-6">Price</th>
                 <th className="font-normal text-left px-6">Start Date</th>
                 <th className="font-normal text-left px-6">End Date</th>
+                <th className="font-normal text-left px-6">Status</th>
                 <th className="font-normal text-left px-6">Model</th>
                 <th className="font-normal text-left px-6">Actions</th>
               </tr>
@@ -67,7 +68,7 @@ export default function BookingTable(props: TableProps) {
                       href={`/vehicle-detail/?id=${listing.vehicle_post_id}`}
                       prefetch={false}
                     >
-                      <div className="flex items-center">
+                      <div className="flex flex-col xl:flex-row items-center">
                         <Image
                           src={listing.vehicle_post.vehicle_image}
                           alt="car"
@@ -75,7 +76,7 @@ export default function BookingTable(props: TableProps) {
                           width={48}
                           className="w-12 h-12 rounded-full flex-shrink-0 object-contain object-center"
                         />
-                        <div className="pl-6">
+                        <div className="xl:pl-6">
                           <p className="font-medium">
                             {listing.vehicle_post.vehicle_name}
                           </p>
@@ -110,10 +111,29 @@ export default function BookingTable(props: TableProps) {
                   </td>
                   <td className="px-6">
                     <p className="font-medium">
+                      {listing.status === "pending" ? (
+                        <span className="bg-yellow-200 text-yellow-600 py-1 px-3 rounded-full text-xs">
+                          Pending
+                        </span>
+                      ) : listing.status === "accepted" ? (
+                        <span className="bg-green-200 text-green-600 py-1 px-3 rounded-full text-xs">
+                          Accepted
+                        </span>
+                      ) : (
+                        <span className="bg-red-200 text-red-600 py-1 px-3 rounded-full text-xs">
+                          Rejected
+                        </span>
+                      )}
+                    </p>
+                  </td>
+                  <td className="px-6">
+                    <p className="font-medium">
                       {listing.vehicle_post.vehicle_number}
                     </p>
                   </td>
-                  <td className="px-8 2xl:px-0"></td>
+                  <td className="px-8 2xl:px-0">
+                    <ActionButtons bookingId={listing.booking_id} />
+                  </td>
                 </tr>
               ))}
             </tbody>

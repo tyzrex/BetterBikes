@@ -50,6 +50,8 @@ const mountParticipantStoppedTypingEvent = (socket: ChatSocket) => {
   });
 };
 
+
+
 interface IAccessToken {
   id: string;
   iat: number;

@@ -11,6 +11,7 @@ import {
   getConversationRecommendations,
   sendMessage,
 } from "@/api/messenger";
+import { useToast } from "@/components/ui/use-toast";
 interface Props {
   chats?: IChatsResponse;
   info?: (IChatInfo | undefined)[];
@@ -47,6 +48,7 @@ export default function MessengerPage(props: Props) {
       console.log(err);
     }
   };
+  const { toast } = useToast();
 
   useEffect(() => {
     socket?.on("message", (data) => {
