@@ -12,7 +12,7 @@ export const Navlinks: any[] = [
   },
   {
     name: "Rent Bikes",
-    href: "/blogs",
+    href: "/explore",
     icon: <GrNotes className="w-6 h-6" />,
   },
   {

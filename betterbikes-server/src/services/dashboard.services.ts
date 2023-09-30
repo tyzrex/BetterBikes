@@ -4,6 +4,8 @@ import {prisma} from "../config/prisma";
 const MAX_VEHICLE_POSTS = 4
 const MAX_BOOKING_POSTS = 6
 
+
+
 export const getDashboardData = async(
     user: IRegisteredUser,
     currentPage: number
@@ -37,18 +39,93 @@ export const getDashboardData = async(
                     authUserId: user?.user?.id as string,
                     oauthUserId: user?.oAuthUser?.id as string
                 },
-                status: "pending"
             }
         })
+
+        const vehicleDataCount =async (type: string) => {
+            return prisma.vehiclePost.count({
+                where:{
+                    authUserId: user?.user?.id as string,
+                    oauthUserId: user?.oAuthUser?.id as string,
+                    vehicle_type: type
+                }
+            })
+        }
+
+        const bikeVehicleData = await vehicleDataCount("Bike")
+        const scooterVehicleData = await vehicleDataCount("Scooter")
+
+        //data for booking by type pending, accepted, rejected
+
+        const bookingStatusData = async (status: string) => {
+            return prisma.booking.count({
+                where:{
+                    vehicle_post:{
+                        authUserId: user?.user?.id as string,
+                        oauthUserId: user?.oAuthUser?.id as string
+                    },
+                    status: status
+                }
+            })
+        }
+
+        const pendingBookingData = await bookingStatusData("pending")
+        const acceptedBookingData = await bookingStatusData("accepted")
+        const rejectedBookingData = await bookingStatusData("rejected")
+
+        const earnings = await prisma.booking.aggregate({
+            where:{
+                vehicle_post:{
+                    authUserId: user?.user?.id as string,
+                    oauthUserId: user?.oAuthUser?.id as string
+                },
+                status: "accepted"
+            },
+            _sum:{
+                total_price: true
+            }
+        })
+
+        const earningData = async (status: string) => {
+            return prisma.booking.aggregate({
+                where:{
+                    vehicle_post:{
+                        authUserId: user?.user?.id as string,
+                        oauthUserId: user?.oAuthUser?.id as string
+                    },
+                    status: status
+                },
+                _sum:{
+                    total_price: true
+                }
+            })
+        }
+
+        const pendingEarnings = await earningData("pending")
+        const acceptedEarnings = await earningData("accepted")
 
 
         return {
             vehiclesCount: count,
             bookingCount: bookingRequests,
+            earnings: earnings._sum?.total_price ? earnings._sum?.total_price : 0,
             pages,
             previousPage,
             nextPage,
             vehiclePosts,
+            vehicleData: {
+                bike: bikeVehicleData,
+                scooter: scooterVehicleData
+            },
+            bookingData: {
+                pending: pendingBookingData,
+                accepted: acceptedBookingData,
+                rejected: rejectedBookingData
+            },
+            earningsData: {
+                pending: pendingEarnings._sum?.total_price ? pendingEarnings._sum?.total_price : 0,
+                accepted: acceptedEarnings._sum?.total_price ? acceptedEarnings._sum?.total_price : 0,
+            }
         }
     }
     catch(err){
@@ -68,7 +145,7 @@ export const getMyBookingRequests = async(
                     authUserId: user?.user?.id as string,
                     oauthUserId:  user?.oAuthUser?.id as string
                 },
-                status: "pending"
+                // status: "pending"
             }
         })
 
@@ -84,13 +161,13 @@ export const getMyBookingRequests = async(
                     authUserId: user?.user?.id as string,
                     oauthUserId:  user?.oAuthUser?.id as string
                 },
-                status: "pending"
             },
             select:{
                 booking_id: true,
                 start_date: true,
                 end_date: true,
                 vehicle_post_id: true,
+                status: true,
                 vehicle_post:{
                     select:{
                         vehicle_name: true,
@@ -101,8 +178,6 @@ export const getMyBookingRequests = async(
                         vehicle_brand: true,
                         vehicle_number: true,
                     }
-                    
-                    
                 }
             }
         })

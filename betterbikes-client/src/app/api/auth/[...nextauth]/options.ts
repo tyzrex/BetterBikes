@@ -78,6 +78,7 @@ export const options: NextAuthOptions = {
         session.user.refreshExpireTime = response.refreshExpireTime;
         session.user.refreshToken = response.refreshToken;
       }
+
       return session;
     },
     async signIn({ user, account }) {
