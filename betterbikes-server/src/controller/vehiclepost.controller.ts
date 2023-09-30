@@ -1,5 +1,5 @@
 import { VehicleSchema } from "../validation/listValidation";
-import { createPost, getFeaturedVehicles, getVehicleDetail, searchVehicles, uploadImage } from "../services/vehiclepost.services";
+import { createPost, getAllVehicles, getFeaturedVehicles, getVehicleDetail, searchVehicles, uploadImage } from "../services/vehiclepost.services";
 import AppError from "../utils/error";
 import ErrorHandler from "../utils/errorType";
 import e, { NextFunction, Request, Response } from "express";
@@ -99,6 +99,27 @@ export const GetFeaturedVehicles = async (
 ) => {
   try {
     const featuredVehicles = await getFeaturedVehicles();
+    res.status(200).json({
+      featuredVehicles,
+    });
+  } catch (error) {
+    const errors = ErrorHandler(error);
+    next(new AppError(errors.statusCode, errors.message));
+  }
+}
+
+export const GetAllVehicles = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const currentPage = Number(req.query.page) || 1;
+    // const localId = res.locals.id;
+    const featuredVehicles = await getAllVehicles(
+      // userType,
+      currentPage
+    );
     res.status(200).json({
       featuredVehicles,
     });

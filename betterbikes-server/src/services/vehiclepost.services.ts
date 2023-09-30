@@ -120,3 +120,35 @@ export const searchVehicles = async (
     }
 }
 
+const MAX_VEHICLE_POSTS = 10
+
+export const getAllVehicles = async (
+  currentPage: number
+) => {
+  try{
+    const count = await prisma.vehiclePost.count();
+            const pages = Math.ceil(count/MAX_VEHICLE_POSTS)
+        const previousPage = currentPage > 1 ? `/?page=${currentPage-1}` : null
+        const nextPage = currentPage < pages ? `/?page=${currentPage+1}` : null
+    //get all vehicles except the ones that are the user's own
+    const vehicles = await prisma.vehiclePost.findMany({
+      take: MAX_VEHICLE_POSTS,
+      skip: (currentPage - 1) * MAX_VEHICLE_POSTS,
+
+      select: {
+        vehicle_name: true,
+        vehicle_image: true,
+        vehicle_post_id: true,
+        vehicle_price: true
+      }
+    })
+    return {
+      vehicles,
+      pages,
+      nextPage,
+      previousPage
+    }
+  }catch(err){
+    throw err
+  }
+}
