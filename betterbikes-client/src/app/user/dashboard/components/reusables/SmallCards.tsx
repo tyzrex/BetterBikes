@@ -2,7 +2,7 @@ import { AiOutlineArrowDown, AiOutlineArrowUp } from "react-icons/ai";
 
 interface SmallCardsProps {
   title: string;
-  value: number;
+  value: number | string;
   percentage: number;
 }
 

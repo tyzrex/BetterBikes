@@ -1,7 +1,13 @@
 import { AiOutlineSetting } from "react-icons/ai";
-import { BiSolidDashboard, BiCategory, BiUserCircle } from "react-icons/bi";
+import {
+  BiSolidDashboard,
+  BiCategory,
+  BiUserCircle,
+  BiLogoMessenger,
+} from "react-icons/bi";
 import { BsCartDash } from "react-icons/bs";
-import { PiPersonSimpleBikeFill } from "react-icons/pi";
+import { PiPersonSimpleBikeFill, PiMessengerLogo } from "react-icons/pi";
+
 interface ISidebarItem {
   icon: JSX.Element;
   label: string;
@@ -31,9 +37,9 @@ export const sidebarItems: ISidebarItem[] = [
     href: "/user/rent-requests",
   },
   {
-    icon: <BsCartDash className="w-6 h-6" />,
-    label: "My Bookings",
-    href: "/user/dashboard/Bookings",
+    icon: <PiMessengerLogo className="w-6 h-6" />,
+    label: "Messenger",
+    href: "/user/messenger",
   },
   {
     icon: <BiUserCircle className="w-6 h-6" />,

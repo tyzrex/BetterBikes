@@ -11,12 +11,26 @@ export interface ITableVehicle{
 
 export interface IDashboardData{
     dashboardData: {
+      earnings: number;
       vehiclesCount: number;
       bookingCount: number;
       vehiclePosts: ITableVehicle[];
       pages: number;
       nextPage: string;
       previousPage: string;
+      vehicleData: {
+        bike: number;
+        scooter: number;
+      };
+      bookingData: {
+        pending: number;
+        accepted: number;
+        rejected: number;
+      };
+      earningsData: {
+        pending: number;
+        accepted: number;
+      };
     };
 }
 
@@ -56,6 +70,7 @@ export interface BookingRequest {
     start_date:      Date;
     end_date:        Date;
     vehicle_post_id: string;
+    status:          string;
     authUser : {
       name: string;
     } | null;
