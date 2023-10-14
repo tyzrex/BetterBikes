@@ -60,3 +60,18 @@ export async function getConversationRecommendations(
         throw err
     }
 }
+
+
+export async function createConversation(
+    receiver: string,
+){
+    const session = await initSession()
+    try{
+        const response = await serverProtectedRequest(`/messenger/create-conversation`, 'POST', session, {receiver})
+        return response
+    }
+    catch(err){
+        console.log(err)
+        throw err
+    }
+}

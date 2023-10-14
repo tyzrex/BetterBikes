@@ -3,7 +3,6 @@ import { Session } from "next-auth"
 
 export async function serverProtectedRequest (url: string, method: string,session?: Session|null  ,body?: any, caching?: any) {
     try{
-
         const headers = new Headers(
             {
                 'Content-Type': 'application/json',
@@ -12,9 +11,6 @@ export async function serverProtectedRequest (url: string, method: string,sessio
         if(session){
             headers.append('Authorization', `Bearer ${session.user.access_token}`)
         }
-
-        
-
         const response = await fetch(
         `${process.env.API_URL}${url}`, {
         method: method,
@@ -23,14 +19,17 @@ export async function serverProtectedRequest (url: string, method: string,sessio
         cache: caching ? caching : 'no-cache'
     })
 
-    const data = await response.json()
+    
     if(response.status === 200){
+        var data = await response.json()
           return data
     }
+    //if response cannot be parsed as json, return the response
+
     else{
         throw {
             status: response.status,
-            message: data.message
+            message: data ? data.message : "Something went wrong"
         }
     }
    
