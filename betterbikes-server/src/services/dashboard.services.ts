@@ -7,17 +7,16 @@ const MAX_BOOKING_POSTS = 6
 
 
 export const getDashboardData = async(
-    user: IRegisteredUser,
+    userId: string,
     currentPage: number
 ) =>{
     try{
-        if(!user){
+        if(!userId){
             throw new Error("User not found")
         }
         const count = await prisma.vehiclePost.count({
             where:{
-                authUserId: user?.user?.id as string,
-                oauthUserId: user?.oAuthUser?.id as string
+                user_id: userId
             }
         })
         const pages = Math.ceil(count/MAX_VEHICLE_POSTS)
@@ -28,16 +27,14 @@ export const getDashboardData = async(
             take: MAX_VEHICLE_POSTS,
             skip: (currentPage - 1) * MAX_VEHICLE_POSTS,
             where:{
-                authUserId: user?.user?.id as string,
-                oauthUserId: user?.oAuthUser?.id as string
-            }
+                user_id: userId
+            },
         })
 
         const bookingRequests = await prisma.booking.count({
             where:{
                 vehicle_post:{
-                    authUserId: user?.user?.id as string,
-                    oauthUserId: user?.oAuthUser?.id as string
+                    user_id: userId
                 },
             }
         })
@@ -45,8 +42,7 @@ export const getDashboardData = async(
         const vehicleDataCount =async (type: string) => {
             return prisma.vehiclePost.count({
                 where:{
-                    authUserId: user?.user?.id as string,
-                    oauthUserId: user?.oAuthUser?.id as string,
+                    user_id: userId,
                     vehicle_type: type
                 }
             })
@@ -61,8 +57,7 @@ export const getDashboardData = async(
             return prisma.booking.count({
                 where:{
                     vehicle_post:{
-                        authUserId: user?.user?.id as string,
-                        oauthUserId: user?.oAuthUser?.id as string
+                        user_id: userId
                     },
                     status: status
                 }
@@ -76,8 +71,7 @@ export const getDashboardData = async(
         const earnings = await prisma.booking.aggregate({
             where:{
                 vehicle_post:{
-                    authUserId: user?.user?.id as string,
-                    oauthUserId: user?.oAuthUser?.id as string
+                    user_id: userId
                 },
                 status: "accepted"
             },
@@ -90,8 +84,7 @@ export const getDashboardData = async(
             return prisma.booking.aggregate({
                 where:{
                     vehicle_post:{
-                        authUserId: user?.user?.id as string,
-                        oauthUserId: user?.oAuthUser?.id as string
+                        user_id: userId
                     },
                     status: status
                 },
@@ -134,7 +127,7 @@ export const getDashboardData = async(
 }
 
 export const getMyBookingRequests = async(
-    user: IRegisteredUser,
+    userId: string,
     currentPage: number
 ) =>{
     try{
@@ -142,8 +135,7 @@ export const getMyBookingRequests = async(
         const count = await prisma.booking.count({
             where:{
                 vehicle_post:{
-                    authUserId: user?.user?.id as string,
-                    oauthUserId:  user?.oAuthUser?.id as string
+                    user_id: userId
                 },
                 // status: "pending"
             }
@@ -158,8 +150,7 @@ export const getMyBookingRequests = async(
             skip: (currentPage - 1) * MAX_BOOKING_POSTS,
             where:{
                 vehicle_post:{
-                    authUserId: user?.user?.id as string,
-                    oauthUserId:  user?.oAuthUser?.id as string
+                    user_id: userId
                 },
             },
             select:{

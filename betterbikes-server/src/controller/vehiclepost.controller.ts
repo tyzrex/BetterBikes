@@ -17,7 +17,7 @@ export const PostVehicle = async (
     }
     console.log(req.files);
 
-    const userType = await checkUserType(res.locals.id);
+    const userId = res.locals.id;
     req.body.vehicleFeatures = JSON.parse(req.body.vehicleFeatures);
     req.body.vehicleImage = "";
     const vehicleData = VehicleSchema.parse(req.body);
@@ -37,7 +37,7 @@ export const PostVehicle = async (
       vehicleData.vehicleImage = uploadedImage;
     }
 
-    const vehiclePost = await createPost(vehicleData, userType);
+    const vehiclePost = await createPost(vehicleData, userId);
     if (vehiclePost) {
       res.status(201).json({
         msg: "Successfully created vehicle post",

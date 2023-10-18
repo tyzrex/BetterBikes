@@ -7,7 +7,7 @@ const router = Router()
 router.post("/send", validateToken, sendMessage)
 router.get("/get-conversations", validateToken, getUserConversations)
 router.get("/conversation/:id", validateToken, getConversationMessages)
-router.get("/create-conversation", validateToken, createConversation)
+router.post("/create-conversation", validateToken, createConversation)
 router.get("/create-conversation-suggestions", validateToken, createConversationSuggestions)
 
 
