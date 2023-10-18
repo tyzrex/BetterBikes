@@ -7,11 +7,14 @@ import { AiOutlineSend } from "react-icons/ai";
 import { useEffect, useState } from "react";
 import { IChatsResponse, ISelectedConversation } from "../interfaces/chats";
 import {
+  createConversation,
   getConversationMessages,
   getConversationRecommendations,
   sendMessage,
 } from "@/api/messenger";
 import { useToast } from "@/components/ui/use-toast";
+import { revalidatePath } from "next/cache";
+import { revalidate } from "@/api/booking";
 interface Props {
   chats?: IChatsResponse;
   info?: (IChatInfo | undefined)[];
@@ -86,6 +89,15 @@ export default function MessengerPage(props: Props) {
     }
   }, [search.length]);
 
+  const createNewConversation = async (receiver: string) => {
+    try {
+      const newConvo = await createConversation(receiver);
+      revalidate("/user/messenger");
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <>
       <div className="h-[80vh] w-full flex flex-col md:flex-row gap-10 antialiased text-main-foreground overflow-hidden">
@@ -120,7 +132,7 @@ export default function MessengerPage(props: Props) {
                     </div>
                     <button
                       onClick={() => {
-                        setSelectedChat(suggestion);
+                        createNewConversation(suggestion.id);
                       }}
                       className="accent-btn p-2 rounded-full ml-5"
                     >

@@ -8,7 +8,7 @@ interface Booking{
     auth_user_id?: string;
     oauth_user_id?: string;
     total_price: number;
-    user: IRegisteredUser
+    user: string;
 }
 
 export const createBooking = async (
@@ -21,8 +21,7 @@ export const createBooking = async (
                 start_date: props.start_date,
                 end_date: props.end_date,
                 total_price: props.total_price,
-                auth_user_id: props.user.user ? props.user.user.id : null,
-                oauth_user_id: props.user.oAuthUser ? props.user.oAuthUser.id : null,
+                user_id: props.user,
                 status: "pending"
             }
         })
@@ -64,15 +63,14 @@ export const checkAlreadyBooked = async (
 }
 
 export const checkOwner = async (
-    user: IRegisteredUser,
+    userId: string,
     vehicle_post_id: string
 ) => {
     try{
         const vehicle = await prisma.vehiclePost.findFirst({
             where:{
                 vehicle_post_id: vehicle_post_id,
-                authUserId: user.user ? user.user.id : null,
-                oauthUserId: user.oAuthUser ? user.oAuthUser.id : null
+                user_id: userId
             },
             select:{
                 vehicle_post_id: true

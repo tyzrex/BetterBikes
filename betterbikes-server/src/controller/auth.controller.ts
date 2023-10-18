@@ -169,9 +169,20 @@ export const RefreshToken = async (req: Request, res: Response) => {
     }
 
     const newAccessToken = await getRefreshToken(token);
+    const newRefreshToken = await getRefreshToken(token);
+    const accessExpireTime = new Date(
+    Date.now() + 24 * 60 * 60 * 1000
+    );
+
+    const refreshExpireTime = new Date(
+     Date.now() + 24 * 7 * 60 * 60 * 1000
+    );
 
     res.status(200).json({
       newAccessToken: newAccessToken,
+      accessExpireTime: accessExpireTime,
+      refreshExpireTime: refreshExpireTime,
+      refreshToken: newRefreshToken,
     });
   } catch (err) {
     res.status(400).json(err);

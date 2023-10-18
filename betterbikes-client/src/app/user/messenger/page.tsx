@@ -17,6 +17,8 @@ export default async function Messenger() {
   const session = await getServerSession(options);
   const conversations: IChatsResponse = await getConversations(session);
 
+  console.log(conversations);
+
   const conversationInfo = conversations?.conversations.map((conversation) => {
     if (conversation.profileOneId === session?.user?.id) {
       return {
@@ -25,8 +27,14 @@ export default async function Messenger() {
         receiver: conversation.profileTwoId,
         receiverName: conversation.profileTwo.name,
         conversationId: conversation.id,
-        lastMessage: conversation.directMessages[0].content,
-        lastMessageDate: conversation.directMessages[0].createdAt,
+        lastMessage:
+          conversation.directMessages.length > 0
+            ? conversation.directMessages[0].content
+            : "",
+        lastMessageDate:
+          conversation.directMessages.length > 0
+            ? conversation.directMessages[0].createdAt
+            : "",
       };
     } else {
       return {
@@ -35,8 +43,14 @@ export default async function Messenger() {
         receiver: conversation.profileOneId,
         receiverName: conversation.profileOne.name,
         conversationId: conversation.id,
-        lastMessage: conversation.directMessages[0].content,
-        lastMessageDate: conversation.directMessages[0].createdAt,
+        lastMessage:
+          conversation.directMessages.length > 0
+            ? conversation.directMessages[0].content
+            : "",
+        lastMessageDate:
+          conversation.directMessages.length > 0
+            ? conversation.directMessages[0].createdAt
+            : "",
       };
     }
   });

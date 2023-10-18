@@ -21,7 +21,6 @@ export const BookVehicle = async (
     const checkInDate = new Date(checkIn);
     const checkOutDate = new Date(checkOut);
     const user = res.locals.id;
-    const userType = await checkUserType(user);
 
     if (checkInDate.getTime() > checkOutDate.getTime()) {
       return next(
@@ -29,14 +28,13 @@ export const BookVehicle = async (
       );
     }
 
-    const isOwner = await checkOwner(userType, vehicle_post_id);
+    const isOwner = await checkOwner(user, vehicle_post_id);
     const getOwnerId = await prisma.vehiclePost.findFirst({
       where: {
         vehicle_post_id: vehicle_post_id,
       },
       select: {
-        authUserId: true,
-        oauthUserId: true,
+          user_id: true,
       },
     });
 
@@ -64,12 +62,12 @@ export const BookVehicle = async (
       start_date: checkInDate,
       end_date: checkOutDate,
       total_price: total_price,
-      user: userType,
+      user: user
     });
 
     if (booking) {
       console.log(booking);
-      const owner = getOwnerId?.authUserId ? getOwnerId.authUserId : getOwnerId?.oauthUserId as string;
+      const owner = getOwnerId?.user_id as string;
       console.log(owner);
       emitSocketEvent(req, owner, "booking", {
         booking_id: booking.booking_id,

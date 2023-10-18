@@ -36,7 +36,7 @@ export const uploadImage = async (uploadFile: UploadedFile) => {
 
 export const createPost = async (
   vehiclePost: IVehiclePost,
-  user: IRegisteredUser
+  userId: string
 ) => {
   try {
     const newVehiclePost = await prisma.vehiclePost.create({
@@ -51,8 +51,7 @@ export const createPost = async (
         vehicle_color: vehiclePost.vehicleColor,
         vehicle_price: parseInt(vehiclePost.vehiclePrice),
         vehicle_description: vehiclePost.vehicleDescription,
-        authUserId: user.user ? user.user.id : null,
-        oauthUserId: user.oAuthUser ? user.oAuthUser.id : null,
+        user_id : userId
       },
     });
     return newVehiclePost;

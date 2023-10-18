@@ -158,6 +158,7 @@ export const createConversation = async (
   try {
     const senderId = res.locals.id;
     const receiverId = req.body.receiver;
+    console.log(senderId, receiverId);
     const conversation = await getOrCreateConversation(
       senderId,
       receiverId,
@@ -194,7 +195,6 @@ export const createConversationSuggestions = async (
       },
     });
 
-    console.log(suggestions);
 
     res.status(200).json({
       suggestions,

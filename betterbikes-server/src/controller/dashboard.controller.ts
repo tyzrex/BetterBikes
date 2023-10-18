@@ -13,8 +13,7 @@ export const DashboardData = async (
     const localId = res.locals.id;
     const currentPage = Number(req.query.page) || 1;
   
-    const userType = await checkUserType(localId);
-    const dashboardData = await getDashboardData(userType, currentPage);
+    const dashboardData = await getDashboardData(localId, currentPage);
     res.status(200).json({
       dashboardData,
     });
@@ -34,7 +33,7 @@ export const DashboardBookingData = async (
     const localId = res.locals.id;
     const currentPage = Number(req.query.page) || 1;
     const userType = await checkUserType(localId);
-    const dashboardData = await getMyBookingRequests(userType, currentPage);
+    const dashboardData = await getMyBookingRequests(localId, currentPage);
     res.status(200).json({
       dashboardData,
     });

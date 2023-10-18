@@ -8,39 +8,35 @@ datasource db {
 }
 
 model User {
-  id            String        @id @default(uuid()) @map("userId")
-  email         String        @unique
-  password      String
-  created_at    DateTime      @default(now())
-  updated_at    DateTime      @default(now())
-  name          String
-  phone         String        @unique
-  address       String
-  role          Role          @default(USER)
-  vehicle_posts VehiclePost[]
-  Booking       Booking[]
-  Profile       Profile?
+  id         String   @id @default(uuid()) @map("userId")
+  email      String   @unique
+  password   String
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now())
+  name       String
+  phone      String   @unique
+  address    String
+  role       Role     @default(USER)
+  Profile    Profile?
 }
 
 model OAuthUser {
-  id             String        @id @default(uuid()) @map("oAuthUserId")
-  email          String        @unique
+  id             String   @id @default(uuid()) @map("oAuthUserId")
+  email          String   @unique
   profile_image  String?
-  created_at     DateTime      @default(now())
-  updated_at     DateTime      @default(now())
+  created_at     DateTime @default(now())
+  updated_at     DateTime @default(now())
   name           String
-  phone          String?       @unique
+  phone          String?  @unique
   address        String?
   oAuth_provider String
   oAuth_id       String
-  role           Role          @default(USER)
-  vehicle_posts  VehiclePost[]
-  Booking        Booking[]
+  role           Role     @default(USER)
   Profile        Profile?
 }
 
 model VehiclePost {
-  vehicle_post_id     String     @id @default(cuid())
+  vehicle_post_id     String    @id @default(cuid())
   vehicle_type        String
   vehicle_model       String
   vehicle_number      String
@@ -51,23 +47,36 @@ model VehiclePost {
   vehicle_name        String
   vehicle_description String
   vehicle_features    String[]
-  created_at          DateTime   @default(now())
-  updated_at          DateTime   @default(now())
-  authUserId          String?    @map("auth_user_id")
-  oauthUserId         String?    @map("oauth_user_id")
-  authUser            User?      @relation(fields: [authUserId], references: [id])
-  oauthUser           OAuthUser? @relation(fields: [oauthUserId], references: [id])
+  created_at          DateTime  @default(now())
+  updated_at          DateTime  @default(now())
+  user_id             String?
+  user                Profile?  @relation(fields: [user_id], references: [id], onDelete: Cascade)
   Booking             Booking[]
+  Store               Store?    @relation(fields: [storeStore_id], references: [store_id])
+  storeStore_id       String?
+}
+
+model Store {
+  store_id      String   @id @default(cuid())
+  store_name    String
+  store_address String
+  store_phone   String
+  store_email   String
+  store_image   String?
+  created_at    DateTime @default(now())
+  updated_at    DateTime @default(now())
+  user_id       String?
+  user          Profile? @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  VehiclePost VehiclePost[]
 }
 
 model Booking {
   booking_id      String      @id @default(cuid())
   vehicle_post_id String
-  auth_user_id    String?
-  oauth_user_id   String?
-  vehicle_post    VehiclePost @relation(fields: [vehicle_post_id], references: [vehicle_post_id])
-  auth_user       User?       @relation(fields: [auth_user_id], references: [id])
-  oauth_user      OAuthUser?  @relation(fields: [oauth_user_id], references: [id])
+  vehicle_post    VehiclePost @relation(fields: [vehicle_post_id], references: [vehicle_post_id], onDelete: Cascade)
+  user_id         String?
+  user            Profile?    @relation(fields: [user_id], references: [id], onDelete: Cascade)
   created_at      DateTime    @default(now())
   updated_at      DateTime    @default(now())
   start_date      DateTime
@@ -82,6 +91,7 @@ model Profile {
   email     String   @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  role      Role     @default(USER)
 
   user_id String?
   user    User?   @relation(fields: [user_id], references: [id], onDelete: Cascade)
@@ -90,6 +100,9 @@ model Profile {
   oauth_user             OAuthUser?     @relation(fields: [oauth_user_id], references: [id], onDelete: Cascade)
   conversationsInitiated Conversation[] @relation("ProfileOne")
   conversationsReceived  Conversation[] @relation("ProfileTwo")
+  VehiclePost            VehiclePost[]
+  Booking                Booking[]
+  Store                  Store[]
 
   @@unique([oauth_user_id])
   @@unique([user_id])
@@ -132,4 +145,7 @@ model DirectMessage {
 enum Role {
   USER
   ADMIN
+  SUPERADMIN
+  STORE
+  PROVIDER
 }
