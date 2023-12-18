@@ -1,22 +1,21 @@
-import express from 'express';
+import bodyParser from 'body-parser';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import bodyParser from 'body-parser';
+import express from 'express';
+import fileUpload from 'express-fileupload';
+import { Server } from 'socket.io';
+
+import { errorMiddleware } from './middleware/errorHandler';
 import appRoutes from './routes/main';
-import {errorMiddleware} from './middleware/errorHandler';
-import "express-async-errors"
-import fileUpload from "express-fileupload"
-import socket, { Server, Socket } from "socket.io"
-
-
 import { createSocketConnection } from './socket';
 import swaggerDocs from './utils/swagger';
+
 dotenv.config();
 
 const app = express();
 app.use(
   cors({
-    origin: ["http://localhost:3000"],
+    origin: process.env.CLIENT_URL,
     credentials: true,
   })
 );
@@ -28,16 +27,12 @@ app.use(
 
 app.use(bodyParser.json());
 
-
-
-// app.get('/', (req, res) => {
-//     res.send('Hello World!');
-// });
-
-//app routes
 app.use(appRoutes);
 
 app.use("*",errorMiddleware)
+
+
+
 
 
 const port = process.env.PORT;

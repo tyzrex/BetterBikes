@@ -1,5 +1,4 @@
-import { IRegisteredUser } from "../interfaces/user";
-import {prisma} from "../config/prisma";
+import { prisma } from '../config/prisma';
 
 const MAX_VEHICLE_POSTS = 4
 const MAX_BOOKING_POSTS = 6
@@ -122,6 +121,7 @@ export const getDashboardData = async(
         }
     }
     catch(err){
+        console.log(err)
         throw err
     }
 }

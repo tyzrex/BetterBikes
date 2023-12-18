@@ -1,8 +1,16 @@
-import { NextFunction, Request, Response } from "express";
-import AppError from "../utils/error";
-import ErrorHandler from "../utils/errorType";
-import { checkUserType } from "../services/auth.services";
-import { getDashboardData, getMyBookingRequests } from "../services/dashboard.services";
+import {
+  NextFunction,
+  Request,
+  Response,
+} from 'express';
+
+import { checkUserType } from '../services/auth.services';
+import {
+  getDashboardData,
+  getMyBookingRequests,
+} from '../services/dashboard.services';
+import AppError from '../utils/error';
+import ErrorHandler from '../utils/errorType';
 
 export const DashboardData = async (
   req: Request,
@@ -18,6 +26,7 @@ export const DashboardData = async (
       dashboardData,
     });
   } catch (err: any) {
+    console.log(err)
     const errors = ErrorHandler(err);
 
     next(new AppError(errors.statusCode, errors.message));

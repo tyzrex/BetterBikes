@@ -1,15 +1,15 @@
-import { prisma } from "../config/prisma";
-import { v2 as cloudinary } from "cloudinary";
-import dotenv from "dotenv";
-import { UploadedFile } from "express-fileupload";
-import { IVehiclePost } from "../interfaces/vehiclePost";
-import { IRegisteredUser } from "@app/interfaces/user";
+import { v2 as cloudinary } from 'cloudinary';
+import dotenv from 'dotenv';
+import { UploadedFile } from 'express-fileupload';
+
+import { prisma } from '../config/prisma';
+import { IVehiclePost } from '../interfaces/vehiclePost';
 
 dotenv.config();
 
 // Configuration
 cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  cloud_name: process.env.CLOUDINARY_URL,
   api_key: process.env.CLOUDINARY_API_KEY,
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });

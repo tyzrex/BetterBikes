@@ -1,20 +1,27 @@
-import { NextFunction, Request, Response } from "express";
+import dotenv from 'dotenv';
+import {
+  NextFunction,
+  Request,
+  Response,
+} from 'express';
+import { OAuth2Client } from 'google-auth-library';
+
+import { prisma } from '../config/prisma';
+import { type IGoogleLogin } from '../interfaces/auth';
 import {
   checkAlreadyRegistered,
-  checkUserType,
   createOauthUser,
   createUser,
   getRefreshToken,
   loginWithCredentials,
   loginWithOAuth,
-} from "../services/auth.services";
-import dotenv from "dotenv";
-import { loginSchema, registerSchema } from "../validation/authValidation";
-import { type IGoogleLogin } from "../interfaces/auth";
-import AppError from "../utils/error";
-import ErrorHandler from "../utils/errorType";
-import { OAuth2Client } from "google-auth-library";
-import { prisma } from "../config/prisma";
+} from '../services/auth.services';
+import AppError from '../utils/error';
+import ErrorHandler from '../utils/errorType';
+import {
+  loginSchema,
+  registerSchema,
+} from '../validation/authValidation';
 
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 dotenv.config();
@@ -90,6 +97,7 @@ export const CredentialLoginUser = async (
       });
     }
   } catch (err) {
+    console.log(err)
     const errors = ErrorHandler(err)
     next(new AppError(errors.statusCode, errors.message ));
   }
