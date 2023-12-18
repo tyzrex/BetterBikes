@@ -1,4 +1,5 @@
-import { Session } from "next-auth"
+import { Session } from 'next-auth';
+
 // import "server-only"
 
 export async function serverProtectedRequest (url: string, method: string,session?: Session|null  ,body?: any, caching?: any) {
@@ -18,7 +19,6 @@ export async function serverProtectedRequest (url: string, method: string,sessio
         body: JSON.stringify(body),
         cache: caching ? caching : 'no-cache'
     })
-
     
     if(response.status === 200){
         var data = await response.json()
@@ -49,7 +49,7 @@ export async function serverRequest (url: string, method: string  ,body?: any) {
         )
         
         const response = await fetch(
-        `${process.env.API_URL}${url}`, {
+        `http://localhost:3000${url}`, {
         method: method,
         headers: headers,
         body: JSON.stringify(body),

@@ -8,16 +8,16 @@ interface Props {
 }
 
 export default function Featured(props: Props) {
-  const data = props.featuredVehicles.featuredVehicles.map(
-    (vehicle: IFeaturedVehicle) => {
-      return {
-        id: vehicle.vehicle_post_id,
-        name: vehicle.vehicle_name,
-        price: vehicle.vehicle_price,
-        image: vehicle.vehicle_image,
-      };
-    }
-  );
+  // const data = props.featuredVehicles.featuredVehicles.map(
+  //   (vehicle: IFeaturedVehicle) => {
+  //     return {
+  //       id: vehicle.vehicle_post_id,
+  //       name: vehicle.vehicle_name,
+  //       price: vehicle.vehicle_price,
+  //       image: vehicle.vehicle_image,
+  //     };
+  //   }
+  // );
 
   return (
     <section className="mt-20 md:mt-10">
@@ -30,9 +30,7 @@ export default function Featured(props: Props) {
           of selection to find your perfect companion
         </p>
       </div>
-      <div className="mt-10">
-        <CardsSwiper data={data} />
-      </div>
+      <div className="mt-10">{/* <CardsSwiper data={data} /> */}</div>
     </section>
   );
 }

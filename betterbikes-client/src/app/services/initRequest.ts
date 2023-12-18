@@ -23,8 +23,7 @@
 import axios from 'axios';
 import { getSession } from 'next-auth/react';
 
-
-const baseURL = process.env.API_URL 
+const baseURL = 'http://localhost:5000'
 
 const ApiClient = () => {
   const defaultOptions = {

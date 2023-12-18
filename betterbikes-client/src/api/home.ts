@@ -5,6 +5,6 @@ export const getFeaturedVehicles = async () => {
         const featuredVehicles = await serverRequest("/vehiclepost/featured-vehicles", "GET");
         return featuredVehicles;
     } catch (error) {
-        throw error;
+        return error;
     }
 }

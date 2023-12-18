@@ -1,11 +1,12 @@
-import { getDashboardData } from "@/api/dashboard";
-import CardGrid from "./components/CardGrid";
+import { getServerSession, Session } from "next-auth";
 
-import Table from "./components/reusables/Table";
-import { Session, getServerSession } from "next-auth";
+import { getDashboardData } from "@/api/dashboard";
 import { options } from "@/app/api/auth/[...nextauth]/options";
+
 import { IDashboardData } from "../interfaces/vehicle";
+import CardGrid from "./components/CardGrid";
 import Charts from "./components/Charts";
+import Table from "./components/reusables/Table";
 
 interface ISearchProps {
   searchParams?: { [key: string]: string | string[] | undefined };
@@ -35,8 +36,8 @@ export default async function Dashboard({ searchParams }: ISearchProps) {
       {
         label: "Vehicles",
         data: [
-          data.dashboardData.vehicleData.bike,
-          data.dashboardData.vehicleData.scooter,
+          data?.dashboardData?.vehicleData.bike ?? 0,
+          data?.dashboardData?.vehicleData.scooter ?? 0,
         ],
         backgroundColor: ["#1F8ED1", "rgba(255, 99, 132, 1)"],
         borderWidth: 1,
@@ -50,9 +51,9 @@ export default async function Dashboard({ searchParams }: ISearchProps) {
       {
         label: "Vehicles",
         data: [
-          data.dashboardData.bookingData.accepted,
-          data.dashboardData.bookingData.pending,
-          data.dashboardData.bookingData.rejected,
+          data.dashboardData.bookingData.accepted ?? 0,
+          data.dashboardData.bookingData.pending ?? 0,
+          data.dashboardData.bookingData.rejected ?? 0,
         ],
         backgroundColor: ["#36ae7c", "rgba(255, 206, 86, 1)", "#e73538"],
         borderWidth: 1,
@@ -66,8 +67,8 @@ export default async function Dashboard({ searchParams }: ISearchProps) {
       {
         label: "Vehicles",
         data: [
-          data.dashboardData.earningsData.accepted,
-          data.dashboardData.earningsData.pending,
+          data.dashboardData.earningsData.accepted ?? 0,
+          data.dashboardData.earningsData.pending ?? 0,
         ],
         backgroundColor: ["rgba(75, 192, 192, 1)", "rgba(153, 102, 255, 1)"],
         borderWidth: 1,

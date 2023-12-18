@@ -1,7 +1,9 @@
-import type { NextAuthOptions } from "next-auth";
-import GoogleProvider from "next-auth/providers/google";
-import CredentialsProvider from "next-auth/providers/credentials";
-import { serverRequest } from "@/app/services/serverRequest";
+import type { NextAuthOptions } from 'next-auth';
+import CredentialsProvider from 'next-auth/providers/credentials';
+import GoogleProvider from 'next-auth/providers/google';
+
+import { PostRequest } from '@/app/services/httpRequest';
+import { serverRequest } from '@/app/services/serverRequest';
 
 export const options: NextAuthOptions = {
   providers: [
@@ -18,17 +20,16 @@ export const options: NextAuthOptions = {
 
       async authorize(credentials, _req) {
         try {
-          const res = await serverRequest(
+          const res = await PostRequest(
             "/auth/login/credentials",
-            "POST",
             {
               email: credentials?.email,
               password: credentials?.password,
             }
           );
-          console.log(res.user)
+          console.log(res)
           if (res) {
-            return res.user
+            return res.data.user
           }
           else{
            return null
