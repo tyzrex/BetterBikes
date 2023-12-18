@@ -1,0 +1,10 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.DashboardRoutes = void 0;
+const dashboard_controller_1 = require("../controller/dashboard.controller");
+const validateToken_1 = require("../middleware/validateToken");
+const express_1 = require("express");
+const router = (0, express_1.Router)();
+router.get("/dashboard-data", validateToken_1.validateToken, dashboard_controller_1.DashboardData);
+router.get("/booking-requests", validateToken_1.validateToken, dashboard_controller_1.DashboardBookingData);
+exports.DashboardRoutes = router;
