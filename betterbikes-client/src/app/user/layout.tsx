@@ -1,5 +1,6 @@
 import Navbar from "./dashboard/components/Navbar";
 import Sidebar from "./dashboard/components/Sidebar";
+
 export default async function RootLayout({
   children,
 }: {

@@ -32,7 +32,7 @@ const nextConfig = {
     NEXTAUTH_URL: process.env.NEXTAUTH_URL,
     GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
     GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
-    NEXTAUTH_SECRECT: process.env.NEXTAUTH_SECRECT,
+    NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET,
   },
   experimental: {
     serverActions: true,

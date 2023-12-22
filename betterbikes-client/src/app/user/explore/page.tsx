@@ -1,12 +1,14 @@
 import VehicleCard from "@/app/(public)/components/Reusables/VehicleCards";
-import { serverRequest } from "@/app/services/serverRequest";
 import Pagination from "@/app/components/Pagination/Pagination";
-import Link from "next/link";
+import { serverRequest } from "@/app/services/serverRequest";
+
 import ExploreHero from "./hero";
 
 interface Props {
   searchParams?: { [key: string]: string | string[] | undefined };
 }
+
+export const dynamic = "force-dynamic";
 
 export default async function ExploreVehicles(props: Props) {
   const params = props.searchParams;
@@ -15,6 +17,14 @@ export default async function ExploreVehicles(props: Props) {
     `/vehiclepost/all-vehicles${pageParam}`,
     "GET"
   );
+
+  if (!vehiclePosts) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <h1 className="text-3xl">No Vehicles Found</h1>
+      </div>
+    );
+  }
 
   return (
     <>

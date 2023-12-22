@@ -17,7 +17,7 @@ export async function serverProtectedRequest (url: string, method: string,sessio
         method: method,
         headers: headers,
         body: JSON.stringify(body),
-        cache: caching ? caching : 'no-cache'
+        cache: 'no-store'
     })
     
     if(response.status === 200){
@@ -53,7 +53,7 @@ export async function serverRequest (url: string, method: string  ,body?: any) {
         method: method,
         headers: headers,
         body: JSON.stringify(body),
-        cache: 'no-cache'
+        cache: 'no-store'
     })
     const data = await response.json()
     console.log(data)
