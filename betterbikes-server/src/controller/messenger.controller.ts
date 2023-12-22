@@ -1,11 +1,14 @@
-import { NextFunction, Request, Response } from "express";
-import AppError from "../utils/error";
-import ErrorHandler from "../utils/errorType";
-import { prisma } from "../config/prisma";
-import { emitSocketEvent } from "../socket";
-import { getOrCreateConversation } from "../services/messenger.services";
+import {
+  NextFunction,
+  Request,
+  Response,
+} from 'express';
 
-
+import { prisma } from '../config/prisma';
+import { getOrCreateConversation } from '../services/messenger.services';
+import { emitSocketEvent } from '../socket';
+import AppError from '../utils/error';
+import ErrorHandler from '../utils/errorType';
 
 export const sendMessage = async (
   req: Request,
@@ -134,7 +137,7 @@ export const getConversationMessages = async (
       }
     });
 
-    const formattedData = messages.map((message) => {
+    const formattedData = messages.map((message: any) => {
       return {
         sender: message.memberId,
         message: message.content,
